@@ -29,6 +29,5 @@
 }
 
 body {
-  background: var(--background-body);
-  color: var(--color-black);
+  color: var(--background-body);
 }

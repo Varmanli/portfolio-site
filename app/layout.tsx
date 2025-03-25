@@ -16,11 +16,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl">
-      <body className="antialiased font-sans">
-        <div className="h-screen  bg-background m-5">
-          <Header />
-          {children}
-        </div>
+      <body className="antialiased font-sans bg-black p-[20px]">
+        <div className="bg-background min-h-screen w-full">{children}</div>
       </body>
     </html>
   );
