@@ -11,6 +11,7 @@ export default function Decorations() {
       <LottieIcon
         src={frog}
         className="absolute top-89 right-53 lg:top-[-24%] lg:right-7"
+        loop
       />
       <LottieIcon
         src={arrow}

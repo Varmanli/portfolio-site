@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "وبسایت من",
+  title: "melika shemirani",
   description: "طراحی‌شده با Next.js و Tailwind CSS",
 };
 

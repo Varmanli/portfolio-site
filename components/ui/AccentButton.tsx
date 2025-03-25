@@ -1,7 +1,8 @@
 interface AccentButtonProps {
   text: string;
-  textSize?: string; // مثل "text-lg" یا "text-2xl"
-  margin?: string; // مثل "ml-5" یا "mt-3"
+  textSize?: "text-sm" | "text-base" | "text-lg" | "text-xl" | "text-2xl";
+  margin?: string;
+  className?: string;
   onClick?: () => void;
 }
 
@@ -9,11 +10,12 @@ export default function AccentButton({
   text,
   textSize = "text-xl",
   margin = "",
+  className = "",
   onClick,
 }: AccentButtonProps) {
   return (
     <button
-      className={`bg-accent border-6 rounded-[92px] px-8 py-4 font-black z-10 ${textSize} ${margin}`}
+      className={`bg-accent border-6 rounded-[92px] px-8 py-4 font-black z-10 ${textSize} ${margin} ${className}`}
       onClick={onClick}
     >
       {text}
