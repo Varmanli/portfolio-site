@@ -13,7 +13,7 @@ export default function AccentButton({
 }: AccentButtonProps) {
   return (
     <button
-      className={`bg-accent border-6 rounded-[92px] px-8 py-4 font-black ${textSize} ${margin}`}
+      className={`bg-accent border-6 rounded-[92px] px-8 py-4 font-black z-10 ${textSize} ${margin}`}
       onClick={onClick}
     >
       {text}

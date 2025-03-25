@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { Header } from "@/components/shared/Header";
-
-// ایمپورت فونت
 
 export const metadata: Metadata = {
   title: "وبسایت من",

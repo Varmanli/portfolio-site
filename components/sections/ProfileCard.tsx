@@ -5,7 +5,7 @@ import light from "@/assets/animations/light.json";
 
 export default function ProfileCard() {
   return (
-    <div className="w-fit border-6 shadow-2xl border-black  p-10 bg-white mt-15 relative">
+    <div className="w-fit border-6 shadow-2xl border-black  p-10 bg-white mt-5 mx-3 lg:mx-0 lg:mt-15 relative">
       {/* گوشه ها */}
       <div className="absolute w-6.5 h-6.5 bg-white border-4 border-black top-[-4%] right-[-3.5%]"></div>
       <div className="absolute w-6.5 h-6.5 bg-white border-4 border-black top-[-4%] left-[-3.5%]"></div>
@@ -29,7 +29,7 @@ export default function ProfileCard() {
         color="#FF6258"
       />
 
-      <div className="absolute left-[-5%] top-20 rounded-full w-[70px] h-[70px] flex justify-center p-2 bg-background border-4 shadow-2xl ">
+      <div className="absolute left-[-3%] top-20 rounded-full w-[70px] h-[70px] flex justify-center p-2 bg-background border-4 shadow-2xl ">
         <LottieIcon src={light} size={50} />
       </div>
     </div>
