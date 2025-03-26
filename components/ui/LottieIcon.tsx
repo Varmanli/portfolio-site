@@ -3,11 +3,13 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
 interface LottieIconProps {
-  src: object; // فایل JSON انیمیشن
-  size?: number; // سایز
-  className?: string;
-  loop?: boolean;
-  autoplay?: boolean;
+  src: object; // انیمیشن لوتی
+  size?: number; // سایز پایه پیکسلی
+  sizeMobile?: number; // سایز موبایل (اختیاری)
+  sizeLg?: number; // سایز دسکتاپ (اختیاری)
+  className?: string; // کلاس‌های اضافی
+  loop?: boolean; // لوپ بودن انیمیشن
+  autoplay?: boolean; // پخش خودکار
 }
 
 const Lottie = dynamic(() => import("lottie-react"), {
@@ -20,6 +22,8 @@ const Lottie = dynamic(() => import("lottie-react"), {
 export default function LottieIcon({
   src,
   size = 160,
+  sizeMobile,
+  sizeLg,
   className = "",
   loop = false,
   autoplay = true,
@@ -30,11 +34,22 @@ export default function LottieIcon({
     setIsMounted(true);
   }, []);
 
+  const style: React.CSSProperties = {
+    width: sizeMobile ? undefined : `${size}px`,
+    height: sizeMobile ? undefined : `${size}px`,
+  };
+
+  const mobileStyle = sizeMobile
+    ? { width: `${sizeMobile}px`, height: `${sizeMobile}px` }
+    : {};
+
+  const lgStyle = sizeLg ? { width: `${sizeLg}px`, height: `${sizeLg}px` } : {};
+
   if (!isMounted) {
     return (
       <div
         className={`animate-pulse bg-gray-200 rounded-lg ${className}`}
-        style={{ width: size, height: size }}
+        style={{ ...style, ...mobileStyle }}
       />
     );
   }
@@ -42,9 +57,14 @@ export default function LottieIcon({
   return (
     <div
       className={`inline-block ${className}`}
-      style={{ width: size, height: size }}
+      style={{ ...style, ...mobileStyle }}
     >
-      <Lottie animationData={src} loop={loop} autoplay={autoplay} />
+      <div className="block lg:hidden" style={mobileStyle}>
+        <Lottie animationData={src} loop={loop} autoplay={autoplay} />
+      </div>
+      <div className="hidden lg:block" style={lgStyle || style}>
+        <Lottie animationData={src} loop={loop} autoplay={autoplay} />
+      </div>
     </div>
   );
 }
