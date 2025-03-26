@@ -21,6 +21,7 @@ export default function ProfileCard() {
         alt="عکس من"
         width={350}
         height={360}
+        priority
       />
 
       <StarIcon
