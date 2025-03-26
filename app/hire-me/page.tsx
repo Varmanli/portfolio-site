@@ -26,19 +26,31 @@ export default function ContactPage() {
           <div className="space-y-6">
             <ContactRow
               icons={[
-                <FaPhoneAlt className="text-[#F196E5] text-3xl" />,
-                <FaTelegram className="text-[#F196E5] text-3xl hover:scale-110 transition-transform" />,
-                <FaWhatsapp className="text-[#F196E5] text-3xl hover:scale-110 transition-transform" />,
+                <FaPhoneAlt key="phone" className="text-[#F196E5] text-3xl" />,
+                <FaTelegram
+                  key="telegram"
+                  className="text-[#F196E5] text-3xl hover:scale-110 transition-transform"
+                />,
+                <FaWhatsapp
+                  key="whatsapp"
+                  className="text-[#F196E5] text-3xl hover:scale-110 transition-transform"
+                />,
               ]}
               text="+989102408010"
-
             />
             <ContactRow
-              icons={[<IoMdMail className="text-[#F196E5] text-3xl" />]}
+              icons={[
+                <IoMdMail key="email" className="text-[#F196E5] text-3xl" />,
+              ]}
               text="m.shemirani33@gmail.com"
             />
             <ContactRow
-              icons={[<FaLocationDot className="text-[#F196E5] text-3xl" />]}
+              icons={[
+                <FaLocationDot
+                  key="location"
+                  className="text-[#F196E5] text-3xl"
+                />,
+              ]}
               text="تهران"
             />
           </div>
