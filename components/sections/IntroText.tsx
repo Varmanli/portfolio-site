@@ -23,7 +23,7 @@ export default function IntroText() {
         width={40}
         height={40}
         alt="icon"
-        className="absolute bottom-4 right-7 w-auto h-auto lg:bottom-[-8%] lg:right-68"
+        className="absolute bottom-2 right-0 w-auto h-auto lg:bottom-[-8%] lg:right-68"
       />
     </div>
   );

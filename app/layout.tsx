@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body
-        className="antialiased font-sans bg-black p-[20px]"
+        className="antialiased font-sans bg-black p-[8px] lg:p-[20px]"
         suppressHydrationWarning
       >
         <div className="bg-background min-h-screen w-full pb-10">
