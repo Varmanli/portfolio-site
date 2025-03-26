@@ -28,7 +28,7 @@ export function Header() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`relative pb-2 transition-all duration-300 ease-in-out
+                  className={`relative  transition-all duration-300 ease-in-out
                     after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-[4px] 
                     after:rounded-full after:transition-all after:duration-300 after:ease-in-out
                     ${

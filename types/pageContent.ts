@@ -87,3 +87,10 @@ export interface PageMetadata {
   title: string;
   description: string;
 }
+
+export interface PortfolioItem {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+}
