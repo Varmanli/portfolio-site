@@ -15,17 +15,17 @@ export default function Decorations() {
       />
       <LottieIcon
         src={arrow}
-        className="lg:rotate-[190deg] rotate-[20deg]  absolute top-94 right-16 lg:top-[-5%] lg:right-[30%]"
-        sizeMobile={120}
+        className="lg:rotate-[190deg] rotate-[20deg]  absolute top-97 right-16 lg:top-[-5%] lg:right-[30%]"
+        sizeMobile={125}
       />
       <LottieIcon
         src={photoshop}
-        className="absolute top-143 left-45 lg:top-24 lg:left-30 "
+        className="absolute top-150 left-45 lg:top-24 lg:left-30 "
         sizeMobile={100}
       />
       <LottieIcon
         src={ai}
-        className="absolute top-143 left-15 lg:top-24 lg:left-70"
+        className="absolute top-150 left-15 lg:top-24 lg:left-70"
         sizeMobile={100}
       />
       <StarIcon
