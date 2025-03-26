@@ -14,7 +14,7 @@ export function Header() {
           <div className="w-3.5 h-3.5 border-3 border-black bg-white absolute bottom-[-18%] right-[-2.2%]"></div>
           <div className="w-3.5 h-3.5 border-3 border-black bg-white absolute bottom-[-18%] left-[-2.2%]"></div>
           <div className="w-3.5 h-3.5 border-3 border-black bg-white absolute top-[-18%] left-[-2.2%]"></div>
-          <ul className="flex gap-3  lg:gap-10 font-black text-[11.5px] lg:text-xl p-4">
+          <ul className="flex gap-3  lg:gap-10 font-black text-[13.5px] lg:text-xl p-4">
             <li>
               <Link
                 href="/"
@@ -23,16 +23,6 @@ export function Header() {
                 }`}
               >
                 صفحه اصلی
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/about"
-                className={`${
-                  pathname === "/about" ? "border-b-4 border-[#F196E5]" : ""
-                }`}
-              >
-                درباره من
               </Link>
             </li>
             <li>
