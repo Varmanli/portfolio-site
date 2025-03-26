@@ -42,7 +42,7 @@ export default function ServicesPage() {
         </div>
       </section>
       <StarIcon
-        className="absolute bottom-[-100%] left-0 lg:left-0 lg:bottom-[-40%] "
+        className="absolute bottom-[-80%] left-0 lg:left-0 lg:bottom-[-40%] "
         size={100}
         color="#F3ABCB"
       />
