@@ -69,10 +69,80 @@ export interface ContactRowProps {
  */
 
 /**
- * Type for individual service items
- * TODO: Update to include additional service metadata when API integration is added
+ * Service category information
+ * @property {string} id - Unique identifier for the category
+ * @property {string} name - Display name of the category
+ * @property {string} description - Category description
  */
-export type ServiceItem = string;
+export interface ServiceCategory {
+  id: string;
+  name: string;
+  description: string;
+}
+
+/**
+ * Individual service item
+ * @property {string} id - Unique identifier for the service
+ * @property {string} title - Service title
+ * @property {string} description - Service description
+ * @property {string} categoryId - ID of the parent category
+ * @property {string} [imageUrl] - Optional image URL for the service
+ * @property {string[]} [tags] - Optional tags for filtering
+ */
+export interface ServiceItem {
+  id: string;
+  title: string;
+  description: string;
+  categoryId: string;
+  imageUrl?: string;
+  tags?: string[];
+}
+
+/**
+ * Portfolio Types
+ */
+
+/**
+ * Portfolio item information
+ * @property {string} id - Unique identifier for the portfolio item
+ * @property {string} title - Project title
+ * @property {string} description - Project description
+ * @property {string} image - Main image URL
+ * @property {string[]} [galleryUrls] - Optional gallery image URLs
+ * @property {string[]} [tags] - Optional tags for filtering
+ * @property {string} [clientName] - Optional client name
+ * @property {Date} [completionDate] - Optional project completion date
+ */
+export interface PortfolioItem {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  galleryUrls?: string[];
+  tags?: string[];
+  clientName?: string;
+  completionDate?: Date;
+}
+
+/**
+ * Contact Types
+ */
+
+/**
+ * Contact information
+ * @property {string} id - Unique identifier for the contact entry
+ * @property {string} type - Contact type (phone, email, etc.)
+ * @property {string} value - Contact value
+ * @property {string} [icon] - Optional icon identifier
+ * @property {boolean} [isPrimary] - Whether this is a primary contact method
+ */
+export interface ContactInfo {
+  id: string;
+  type: string;
+  value: string;
+  icon?: string;
+  isPrimary?: boolean;
+}
 
 /**
  * Metadata Types
@@ -82,15 +152,42 @@ export type ServiceItem = string;
  * Interface for page metadata
  * @property {string} title - Page title
  * @property {string} description - Page description
+ * @property {string} [keywords] - Optional SEO keywords
+ * @property {string} [ogImage] - Optional Open Graph image URL
  */
 export interface PageMetadata {
   title: string;
   description: string;
+  keywords?: string;
+  ogImage?: string;
 }
 
-export interface PortfolioItem {
+/**
+ * API Response Types
+ */
+
+/**
+ * Generic API response wrapper
+ * @template T - Type of the response data
+ * @property {T} data - Response data
+ * @property {string} [message] - Optional response message
+ * @property {boolean} success - Whether the request was successful
+ */
+export interface ApiResponse<T> {
+  data: T;
+  message?: string;
+  success: boolean;
+}
+
+/**
+ * API error response
+ * @property {string} message - Error message
+ * @property {string} [code] - Optional error code
+ * @property {Record<string, string[]>} [errors] - Optional validation errors
+ */
+export interface ApiError {
   id: number;
-  title: string;
-  description: string;
-  image: string;
+  message: string;
+  code?: string;
+  errors?: Record<string, string[]>;
 }
