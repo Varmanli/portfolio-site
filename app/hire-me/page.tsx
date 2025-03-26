@@ -4,14 +4,16 @@ import HireMeAnim from "@/assets/animations/hireme.json";
 import LottieIcon from "@/components/ui/LottieIcon";
 import { IoMdMail } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
+import { ContactRow } from "@/components/shared/ContactRow";
 
 export default function ContactPage() {
   return (
     <>
       <Header />
-      <section className="z-10 relative flex flex-col gap-15 items-center justify-center p-4  lg:flex-row lg:items-start lg:gap-20 lg:px-20 w-full max-w-[1440px] mx-auto">
-        <div className=" px-4 lg:w-2/5 space-y-6">
-          <p className="text-xl font-semibold leading-relaxed">
+      <section className="z-10 relative flex flex-col-reverse gap-15 items-center justify-center p-4  lg:flex-row lg:items-start lg:gap-20 lg:px-20 w-full max-w-[1440px] mx-auto">
+        <div className="px-4 lg:w-2/5 space-y-10 text-right">
+          {/* متن معرفی */}
+          <p className="text-xl font-semibold leading-loose">
             اگر پروژه‌ای دارید که نیاز به دقت، خلاقیت و اجرای حرفه‌ای داره،
             خوشحال می‌شم بخشی از مسیر شما باشم.
             <br />
@@ -20,29 +22,32 @@ export default function ContactPage() {
             اطلاعات تماسی که در سایت قرار گرفته، همکاری رو با من آغاز کنید.
           </p>
 
-          <div className="flex items-center gap-5">
-            <FaTelegram className="text-[#F196E5] text-4xl" />
-            <FaWhatsapp className="text-[#F196E5] text-4xl" />
-            <FaPhoneAlt className="text-[#F196E5] text-4xl" />
-            <span className="text-xl">989102408010+</span>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <IoMdMail className="text-[#F196E5] text-4xl" />
-            <span className="text-xl">m.shemirani33@gmail.com</span>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <FaLocationDot className="text-[#F196E5] text-4xl" />
-            <span className="text-xl">تهران</span>
+          {/* اطلاعات تماس */}
+          <div className="space-y-6">
+            <ContactRow
+              icons={[
+                <FaPhoneAlt className="text-[#F196E5] text-3xl" />,
+                <FaTelegram className="text-[#F196E5] text-3xl hover:scale-110 transition-transform" />,
+                <FaWhatsapp className="text-[#F196E5] text-3xl hover:scale-110 transition-transform" />,
+              ]}
+              text="+989102408010"
+            />
+            <ContactRow
+              icons={[<IoMdMail className="text-[#F196E5] text-3xl" />]}
+              text="m.shemirani33@gmail.com"
+            />
+            <ContactRow
+              icons={[<FaLocationDot className="text-[#F196E5] text-3xl" />]}
+              text="تهران"
+            />
           </div>
         </div>
 
         {/* فرم تماس */}
         <div className="relative bg-[#CAF3AB] px-5 py-8 rounded-xl w-full max-w-md shadow-lg">
           {/* انیمیشن بالا */}
-          <div className="absolute -top-29 left-20 lg:-top-40 lg:left-34 -translate-x-1/2 w-32">
-            <LottieIcon src={HireMeAnim} loop sizeMobile={120} />
+          <div className="absolute -top-8 left-20 lg:-top-40 lg:left-34 -translate-x-1/2 w-32">
+            <LottieIcon src={HireMeAnim} loop sizeMobile={110} />
           </div>
 
           <form className="flex flex-col gap-4">
