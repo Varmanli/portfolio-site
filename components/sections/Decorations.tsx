@@ -38,11 +38,6 @@ export default function Decorations() {
         size={100}
         color="#F3ABCB"
       />
-      <StarIcon
-        className="absolute top-[-13%] left-50 lg:left-[55%] lg:top-[-30%] "
-        size={140}
-        color="#F3ABCB"
-      />
     </>
   );
 }
