@@ -15,7 +15,7 @@ export default function Decorations() {
       />
       <LottieIcon
         src={arrow}
-        className="lg:rotate-[190deg] rotate-[20deg]  absolute top-97 right-16 lg:top-[-5%] lg:right-[30%]"
+        className="lg:rotate-[190deg] rotate-[40deg]  absolute top-97 right-24 lg:top-[-5%] lg:right-[30%]"
         sizeMobile={125}
       />
       <LottieIcon
