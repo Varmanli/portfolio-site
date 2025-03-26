@@ -34,37 +34,43 @@ export default function LottieIcon({
     setIsMounted(true);
   }, []);
 
-  const style: React.CSSProperties = {
-    width: sizeMobile ? undefined : `${size}px`,
-    height: sizeMobile ? undefined : `${size}px`,
+  const baseSize = size;
+  const mobileSize = sizeMobile ?? size;
+  const lgSize = sizeLg ?? size;
+
+  const style = {
+    width: `${baseSize}px`,
+    height: `${baseSize}px`,
   };
-
-  const mobileStyle = sizeMobile
-    ? { width: `${sizeMobile}px`, height: `${sizeMobile}px` }
-    : {};
-
-  const lgStyle = sizeLg ? { width: `${sizeLg}px`, height: `${sizeLg}px` } : {};
 
   if (!isMounted) {
     return (
       <div
         className={`animate-pulse bg-gray-200 rounded-lg ${className}`}
-        style={{ ...style, ...mobileStyle }}
+        style={style}
       />
     );
   }
 
   return (
-    <div
-      className={`inline-block ${className}`}
-      style={{ ...style, ...mobileStyle }}
-    >
-      <div className="block lg:hidden" style={mobileStyle}>
+    <>
+      <style jsx>{`
+        @media (max-width: 767px) {
+          .lottie-icon {
+            width: ${mobileSize}px;
+            height: ${mobileSize}px;
+          }
+        }
+        @media (min-width: 1024px) {
+          .lottie-icon {
+            width: ${lgSize}px;
+            height: ${lgSize}px;
+          }
+        }
+      `}</style>
+      <div className={`inline-block lottie-icon ${className}`}>
         <Lottie animationData={src} loop={loop} autoplay={autoplay} />
       </div>
-      <div className="hidden lg:block" style={lgStyle || style}>
-        <Lottie animationData={src} loop={loop} autoplay={autoplay} />
-      </div>
-    </div>
+    </>
   );
 }
