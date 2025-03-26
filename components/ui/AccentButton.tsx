@@ -1,10 +1,4 @@
-interface AccentButtonProps {
-  text: string;
-  textSize?: "text-sm" | "text-base" | "text-lg" | "text-xl" | "text-2xl";
-  margin?: string;
-  className?: string;
-  onClick?: () => void;
-}
+import { AccentButtonProps } from "@/types/pageContent";
 
 export default function AccentButton({
   text,

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import { PageMetadata } from "@/types/pageContent";
 
-export const metadata: Metadata = {
+export const metadata: Metadata & PageMetadata = {
   title: "Melika shemirani",
   description: "طراحی‌شده با Next.js و Tailwind CSS",
 };

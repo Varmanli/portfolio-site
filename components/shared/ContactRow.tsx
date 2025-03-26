@@ -1,7 +1,4 @@
-interface ContactRowProps {
-  icons: React.ReactNode[];
-  text: string;
-}
+import { ContactRowProps } from "@/types/pageContent";
 
 export function ContactRow({ icons, text }: ContactRowProps) {
   return (

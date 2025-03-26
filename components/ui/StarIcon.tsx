@@ -1,8 +1,4 @@
-interface StarIconProps {
-  size?: number;
-  color?: string;
-  className?: string;
-}
+import { StarIconProps } from "@/types/pageContent";
 
 export default function StarIcon({
   size = 60,

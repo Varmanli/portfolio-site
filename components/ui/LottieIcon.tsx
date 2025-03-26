@@ -1,16 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-
-interface LottieIconProps {
-  src: object; // انیمیشن لوتی
-  size?: number; // سایز پایه پیکسلی
-  sizeMobile?: number; // سایز موبایل (اختیاری)
-  sizeLg?: number; // سایز دسکتاپ (اختیاری)
-  className?: string; // کلاس‌های اضافی
-  loop?: boolean; // لوپ بودن انیمیشن
-  autoplay?: boolean; // پخش خودکار
-}
+import { LottieIconProps } from "@/types/pageContent";
 
 const Lottie = dynamic(() => import("lottie-react"), {
   ssr: false,
