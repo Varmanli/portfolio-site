@@ -20,7 +20,7 @@ export default function ServicesPage() {
     <>
       <Header />
       <section className="px-6 py-10 max-w-[1440px] mx-auto relative z-10">
-        <p className="text-2xl lg:text-4xl font-bold mb-8 text-center">
+        <p className="text-lg lg:text-4xl font-bold mb-8 text-center">
           آنچه می‌توانم برای شما انجام دهم
         </p>
 
@@ -30,7 +30,7 @@ export default function ServicesPage() {
               key={index}
               className="flex justify-between items-center gap-4 p-5 border-4 border-black bg-white  shadow-xl shadow-black/60"
             >
-              <span className=" text-lg lg:text-2xl font-semibold">{item}</span>
+              <span className="lg:text-2xl font-semibold">{item}</span>
               <Image
                 src="/Service-icon.svg"
                 alt="icon"
@@ -42,7 +42,7 @@ export default function ServicesPage() {
         </div>
       </section>
       <StarIcon
-        className="absolute bottom-[-115%] left-0 lg:left-0 lg:bottom-[-40%] "
+        className="absolute bottom-[-100%] left-0 lg:left-0 lg:bottom-[-40%] "
         size={100}
         color="#F3ABCB"
       />
