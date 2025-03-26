@@ -4,24 +4,32 @@ import { PortfolioItem } from "@/types/pageContent";
 
 export default function PortfolioCard({ item }: { item: PortfolioItem }) {
   return (
-    <div className="border-2 border-black bg-white shadow-lg">
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <Image
-          src={item.image}
-          alt={item.title}
-          fill
-          className="object-cover"
-        />
-      </div>
+    <div className="group relative overflow-hidden border-5 border-black bg-white shadow-xl shadow-black transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 p-5">
+      <Image
+        src={item.image}
+        alt={item.title}
+        width={500}
+        height={400}
+        className="w-full h-auto object-cover "
+      />
 
-      <div className="p-3 space-y-1 text-right">
-        <div className="flex items-center justify-between">
-          <h3 className="font-bold text-base lg:text-lg">{item.title}</h3>
-          <Link href={`/portfolio/${item.id}`} className="text-xl">
-            ↗
-          </Link>
+      {/* اطلاعات زیر عکس */}
+      <div className="flex justify-between items-start p-4">
+        <div>
+          <h3 className="text-xl lg:text-3xl font-bold mb-2">{item.title}</h3>
+          {item.description && (
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {item.description}
+            </p>
+          )}
         </div>
-        <p className="text-sm text-gray-600">{item.subtitle}</p>
+
+        <Image
+          src="./Service-icon.svg"
+          alt="show more"
+          width={30}
+          height={30}
+        />
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ export default function CallToAction() {
         alt="icon"
         width={60}
         height={60}
-        className=" absolute bottom-3 right-3"
+        className=" absolute bottom-3 right-3 lg:right-77"
       />
     </section>
   );
