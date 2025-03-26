@@ -8,7 +8,7 @@ export function Header() {
   return (
     <>
       {" "}
-      <header className="flex justify-center items-center py-4 lg:py-10 border-b-5 border-black z-10 relative">
+      <header className="flex justify-center items-center py-4 lg:py-10  z-10 relative">
         <nav className="border-3 border-black bg-white relative">
           <div className="w-3.5 h-3.5 border-3 border-black bg-white absolute top-[-18%] right-[-2.2%]"></div>
           <div className="w-3.5 h-3.5 border-3 border-black bg-white absolute bottom-[-18%] right-[-2.2%]"></div>
@@ -59,7 +59,7 @@ export function Header() {
         </nav>
       </header>
       <StarIcon
-        className="absolute top-[0] left-[61%] z-0"
+        className="absolute left-30 top-[0] lg:left-[61%] z-0"
         size={140}
         color="#F3ABCB"
       />

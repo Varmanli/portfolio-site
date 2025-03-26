@@ -12,7 +12,7 @@ const services: string[] = [
   "انجام تفکیک رنگ",
   "صفحه‌آرایی",
   "طراحی اوراق اداری",
-  "طراحی اوراق اداری",
+  "طراحی قالب شبکه اجتماعی ",
 ];
 
 export default function ServicesPage() {
