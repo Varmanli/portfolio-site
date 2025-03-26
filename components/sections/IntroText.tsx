@@ -20,10 +20,10 @@ export default function IntroText() {
       />
       <Image
         src="/button-icon.svg"
-        width={50}
-        height={50}
+        width={40}
+        height={40}
         alt="icon"
-        className="absolute bottom-4 right-7 w-auto h-auto lg:bottom-[-4%] lg:right-71"
+        className="absolute bottom-4 right-7 w-auto h-auto lg:bottom-[-8%] lg:right-68"
       />
     </div>
   );

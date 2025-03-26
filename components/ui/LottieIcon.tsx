@@ -1,5 +1,6 @@
 "use client";
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 interface LottieIconProps {
   src: object; // فایل JSON انیمیشن
@@ -9,6 +10,13 @@ interface LottieIconProps {
   autoplay?: boolean;
 }
 
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full animate-pulse bg-gray-200 rounded-lg" />
+  ),
+});
+
 export default function LottieIcon({
   src,
   size = 160,
@@ -16,6 +24,21 @@ export default function LottieIcon({
   loop = false,
   autoplay = true,
 }: LottieIconProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div
+        className={`animate-pulse bg-gray-200 rounded-lg ${className}`}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+
   return (
     <div
       className={`inline-block ${className}`}
