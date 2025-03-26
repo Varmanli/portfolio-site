@@ -1,4 +1,5 @@
 import { Header } from "@/components/shared/Header";
+import StarIcon from "@/components/ui/StarIcon";
 import Image from "next/image";
 
 const services: string[] = [
@@ -18,7 +19,7 @@ export default function ServicesPage() {
   return (
     <>
       <Header />
-      <section className="px-6 py-10 max-w-[1440px] mx-auto">
+      <section className="px-6 py-10 max-w-[1440px] mx-auto relative z-10">
         <p className="text-2xl lg:text-4xl font-bold mb-8 text-center">
           آنچه می‌توانم برای شما انجام دهم
         </p>
@@ -40,6 +41,11 @@ export default function ServicesPage() {
           ))}
         </div>
       </section>
+      <StarIcon
+        className="absolute bottom-[-115%] left-0 lg:left-0 lg:bottom-[-40%] "
+        size={100}
+        color="#F3ABCB"
+      />
     </>
   );
 }
