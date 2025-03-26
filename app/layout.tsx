@@ -17,7 +17,9 @@ export default function RootLayout({
         className="antialiased font-sans bg-black p-[20px]"
         suppressHydrationWarning
       >
-        <div className="bg-background min-h-screen w-full">{children}</div>
+        <div className="bg-background min-h-screen w-full pb-10">
+          {children}
+        </div>
       </body>
     </html>
   );
