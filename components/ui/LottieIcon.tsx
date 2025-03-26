@@ -1,8 +1,12 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 import { LottieIconProps } from "@/types/pageContent";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
+/**
+ * Dynamically imported Lottie component to avoid SSR issues
+ * TODO: Consider adding error boundary for failed animation loads
+ */
 const Lottie = dynamic(() => import("lottie-react"), {
   ssr: false,
   loading: () => (
@@ -10,6 +14,14 @@ const Lottie = dynamic(() => import("lottie-react"), {
   ),
 });
 
+/**
+ * LottieIcon Component
+ * Renders a Lottie animation with responsive sizing and loading states
+ *
+ * @component
+ * @param {LottieIconProps} props - Component props
+ * @returns {JSX.Element} Rendered component
+ */
 export default function LottieIcon({
   src,
   size = 160,
@@ -19,12 +31,7 @@ export default function LottieIcon({
   loop = false,
   autoplay = true,
 }: LottieIconProps) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
+  const isMounted = useIsMounted();
   const baseSize = size;
   const mobileSize = sizeMobile ?? size;
   const lgSize = sizeLg ?? size;
@@ -34,6 +41,7 @@ export default function LottieIcon({
     height: `${baseSize}px`,
   };
 
+  // Show loading state until component is mounted
   if (!isMounted) {
     return (
       <div
@@ -45,6 +53,7 @@ export default function LottieIcon({
 
   return (
     <>
+      {/* Responsive sizing styles */}
       <style jsx>{`
         @media (max-width: 767px) {
           .lottie-icon {

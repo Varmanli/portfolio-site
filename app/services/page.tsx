@@ -1,20 +1,20 @@
 import { Header } from "@/components/shared/Header";
 import StarIcon from "@/components/ui/StarIcon";
 import Image from "next/image";
+import { SERVICES } from "@/constants/services";
 
-const services: string[] = [
-  "آماده‌سازی فایل برای انواع چاپ",
-  "طراحی لیبل و لفاف بسته‌بندی",
-  "طراحی کاتالوگ و بروشور",
-  "نقاشی دیجیتال و طراحی مسکات ",
-  "طراحی وب",
-  "اجرای انواع پروژه‌های گرافیکی",
-  "انجام تفکیک رنگ",
-  "صفحه‌آرایی",
-  "طراحی اوراق اداری",
-  "طراحی قالب شبکه اجتماعی ",
-];
-
+/**
+ * Services Page Component
+ * Displays a list of services offered with decorative elements
+ *
+ * @component
+ * @returns {JSX.Element} Rendered services page
+ *
+ * TODO:
+ * - Add loading state for future API integration
+ * - Add error handling for failed service fetches
+ * - Consider pagination for large service lists
+ */
 export default function ServicesPage() {
   return (
     <>
@@ -25,7 +25,7 @@ export default function ServicesPage() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2  gap-10 lg:gap-15 lg:mx-20">
-          {services.map((item: string, index: number) => (
+          {SERVICES.map((item, index) => (
             <div
               key={index}
               className="flex justify-between items-center gap-4 p-5 border-4 border-black bg-white  shadow-xl shadow-black/60"
