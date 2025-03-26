@@ -1,15 +1,19 @@
 @import "tailwindcss";
+
 @font-face {
   font-family: "Dana";
   src: url("/fonts/dana-regular.woff") format("woff");
   font-weight: 400;
   font-display: swap;
+  font-style: normal;
 }
+
 @font-face {
   font-family: "Dana";
-  src: url("/fonts/dana-Bold.woff") format("woff");
+  src: url("/fonts/dana-bold.woff") format("woff");
   font-weight: 700;
   font-display: swap;
+  font-style: normal;
 }
 
 :root {
@@ -30,4 +34,5 @@
 
 body {
   color: var(--background-body);
+  font-family: var(--font-dana), system-ui, -apple-system, sans-serif;
 }
