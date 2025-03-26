@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { PortfolioItem } from "@/types/pageContent";
 
 export default function PortfolioCard({ item }: { item: PortfolioItem }) {
