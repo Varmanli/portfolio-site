@@ -1,5 +1,5 @@
 interface ContactRowProps {
-  icons: React.ReactNode[]; // حالا یک آرایه از آیکون‌ها
+  icons: React.ReactNode[];
   text: string;
 }
 
@@ -8,7 +8,7 @@ export function ContactRow({ icons, text }: ContactRowProps) {
     <div className="flex items-center gap-4 bg-white px-4 py-3 rounded-lg border-2 border-[#F196E5] shadow-md">
       <div className="flex gap-2">
         {icons.map((icon, index) => (
-          <span key={index}>{icon}</span>
+          <span key={`contact-icon-${index}`}>{icon}</span>
         ))}
       </div>
       <span className="text-xl font-medium">{text}</span>

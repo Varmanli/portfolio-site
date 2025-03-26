@@ -31,6 +31,7 @@ export default function ContactPage() {
                 <FaWhatsapp className="text-[#F196E5] text-3xl hover:scale-110 transition-transform" />,
               ]}
               text="+989102408010"
+
             />
             <ContactRow
               icons={[<IoMdMail className="text-[#F196E5] text-3xl" />]}
