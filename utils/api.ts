@@ -5,6 +5,8 @@ import {
   PortfolioItem,
   ContactInfo,
 } from "@/types/pageContent";
+import { CONFIG } from '@/constants/config';
+import { BaseResponse } from '@/types';
 
 /**
  * API configuration
@@ -20,28 +22,26 @@ const API_BASE_URL =
  * @param {RequestInit} [options] - Request options
  * @returns {Promise<ApiResponse<T>>} API response
  */
-async function apiRequest<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<ApiResponse<T>> {
+export async function fetchApi<T>(
+  endpoint: string, 
+  options?: RequestInit
+): Promise<T & BaseResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await fetch(`${CONFIG.API_URL}${endpoint}`, {
       ...options,
       headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
+        'Content-Type': 'application/json',
+        ...options?.headers,
       },
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
-      throw new Error(data.message || "API request failed");
+      const error = await response.json();
+      throw new Error(error.message);
     }
 
-    return data;
+    return response.json();
   } catch (error) {
-    console.error("API request failed:", error);
     throw error;
   }
 }
@@ -54,14 +54,14 @@ export const servicesApi = {
    * Fetch all services
    * @returns {Promise<ApiResponse<ServiceItem[]>>} List of services
    */
-  getAll: () => apiRequest<ServiceItem[]>("/services"),
+  getAll: () => fetchApi<ServiceItem[]>("/services"),
 
   /**
    * Fetch service by ID
    * @param {string} id - Service ID
    * @returns {Promise<ApiResponse<ServiceItem>>} Service details
    */
-  getById: (id: string) => apiRequest<ServiceItem>(`/services/${id}`),
+  getById: (id: string) => fetchApi<ServiceItem>(`/services/${id}`),
 };
 
 /**
@@ -72,14 +72,14 @@ export const portfolioApi = {
    * Fetch all portfolio items
    * @returns {Promise<ApiResponse<PortfolioItem[]>>} List of portfolio items
    */
-  getAll: () => apiRequest<PortfolioItem[]>("/portfolio"),
+  getAll: () => fetchApi<PortfolioItem[]>("/portfolio"),
 
   /**
    * Fetch portfolio item by ID
    * @param {string} id - Portfolio item ID
    * @returns {Promise<ApiResponse<PortfolioItem>>} Portfolio item details
    */
-  getById: (id: string) => apiRequest<PortfolioItem>(`/portfolio/${id}`),
+  getById: (id: string) => fetchApi<PortfolioItem>(`/portfolio/${id}`),
 };
 
 /**
@@ -90,7 +90,7 @@ export const contactApi = {
    * Fetch all contact information
    * @returns {Promise<ApiResponse<ContactInfo[]>>} List of contact methods
    */
-  getAll: () => apiRequest<ContactInfo[]>("/contact"),
+  getAll: () => fetchApi<ContactInfo[]>("/contact"),
 
   /**
    * Submit contact form
@@ -98,7 +98,7 @@ export const contactApi = {
    * @returns {Promise<ApiResponse<void>>} Submission result
    */
   submitForm: (data: Record<string, string>) =>
-    apiRequest<void>("/contact/submit", {
+    fetchApi<void>("/contact/submit", {
       method: "POST",
       body: JSON.stringify(data),
     }),

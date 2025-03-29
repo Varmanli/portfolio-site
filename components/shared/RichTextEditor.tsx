@@ -28,8 +28,17 @@ import {
   BsTypeStrikethrough,
 } from "react-icons/bs";
 import { useState, useEffect } from "react";
+import ErrorBoundary from "@/components/shared/ErrorBoundary";
 
-export function RichTextEditor({
+export default function RichTextEditorWrapper(props: RichTextEditorProps) {
+  return (
+    <ErrorBoundary>
+      <RichTextEditorContent {...props} />
+    </ErrorBoundary>
+  );
+}
+
+function RichTextEditorContent({
   content = "",
   onChange,
   placeholder = "محتوا را اینجا بنویسید...",
