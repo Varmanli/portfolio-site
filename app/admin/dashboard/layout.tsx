@@ -18,18 +18,16 @@ export default function DashboardLayout({
 }) {
   return (
     <html lang="fa" dir="rtl">
-      <body
-        className="antialiased font-sans"
-        suppressHydrationWarning
-      >
-        <div className="min-h-screen w-full ">
-          <div className="flex min-h-screen bg-gray-100 text-gray-800 rounded-2xl overflow-hidden">
-            <Sidebar />
-            <div className="flex-1 flex flex-col">
-              <Topbar />
-              <main className="p-4">{children}</main>
-            </div>
-          </div>
+      <body className="flex h-screen overflow-hidden bg-gray-100 text-gray-800">
+        {/* Sidebar ثابت */}
+        <div className="w-64 flex-shrink-0">
+          <Sidebar />
+        </div>
+
+        {/* Content Scrollable */}
+        <div className="flex flex-col flex-1 h-full">
+          <Topbar />
+          <main className="flex-1 overflow-y-auto p-4">{children}</main>
         </div>
       </body>
     </html>
