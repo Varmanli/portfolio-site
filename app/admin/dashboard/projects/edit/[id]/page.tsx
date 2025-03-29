@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { MdAdd } from "react-icons/md";
+import { useState, useEffect } from "react";
+import { MdEdit } from "react-icons/md";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { ImageUploader } from "@/components/dashboard/projects/ImageUploader";
@@ -9,11 +9,16 @@ import { Gallery } from "@/components/dashboard/projects/Gallery";
 import RichTextEditor from "@/components/shared/RichTextEditor";
 import { GalleryItem, ProjectFormData } from "@/types/project";
 import { generateUniqueId } from "@/utils/id";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { portfolioApi } from "@/lib/api/portfolioApi"; 
+import { portfolioApi } from "@/lib/api/portfolioApi";
+import LoadingOverlay from "@/components/shared/LoadingOverlay";
 
-export default function CreateProjectPage() {
+export default function EditProjectPage() {
+  const router = useRouter();
+  const params = useParams();
+  const [loading, setLoading] = useState(true);
+
   const [formData, setFormData] = useState<ProjectFormData>({
     title: "",
     caption: "",
@@ -23,8 +28,62 @@ export default function CreateProjectPage() {
     galleryPreviews: [],
     content: "",
   });
+
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  // تابع کمکی برای ساخت URL تصویر
+  const getImageUrl = (path: string | null | undefined) => {
+    if (!path) return "";
+
+    // اگر path یک blob باشد
+    if (path.startsWith("blob:")) return path;
+
+    // اگر path یک URL کامل باشد
+    if (path.startsWith("http")) return path;
+
+    // اگر path با /uploads شروع میشه
+    if (path.startsWith("/uploads")) {
+      return `${process.env.NEXT_PUBLIC_API_URL}${path}`;
+    }
+
+    // در غیر این صورت /uploads/ رو اضافه کن
+    return `${process.env.NEXT_PUBLIC_API_URL}/uploads/${path}`;
+  };
+
+  // لود اطلاعات اولیه از API
+  useEffect(() => {
+    const loadProject = async () => {
+      try {
+        const data = await portfolioApi.getById(Number(params.id));
+        console.log("Received data:", data);
+
+        setFormData({
+          title: data.title || "",
+          caption: data.shortDesc || "",
+          mainImage: null,
+          mainPreview: getImageUrl(data.thumbnail),
+          gallery: [],
+          galleryPreviews: data.gallery.map((item: any) => ({
+            id: item.id || generateUniqueId(),
+            // برای گالری هم از همون تابع استفاده می‌کنیم
+            src: getImageUrl(item.imageUrl),
+          })),
+          content: data.content || "",
+        });
+      } catch (error: any) {
+        console.error("Load error:", error);
+        toast.error(error.message || "خطا در دریافت اطلاعات نمونه‌کار");
+        router.push("/admin/dashboard/projects");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (params.id) {
+      loadProject();
+    }
+  }, [params.id]);
 
   const handleMainImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,16 +111,16 @@ export default function CreateProjectPage() {
   };
 
   const handleRemoveImage = (indexToRemove: number) => {
-    console.log("Page: Removing image at index:", indexToRemove);
     setFormData((prev) => {
-      // Create new arrays without the removed item
       const newGallery = prev.gallery.filter((_, idx) => idx !== indexToRemove);
       const newGalleryPreviews = prev.galleryPreviews.filter(
         (_, idx) => idx !== indexToRemove
       );
 
-      // Revoke the object URL to prevent memory leaks
-      URL.revokeObjectURL(prev.galleryPreviews[indexToRemove].src);
+      // اگر تصویر جدید آپلود شده بود، URL رو revoke کنیم
+      if (prev.gallery[indexToRemove]) {
+        URL.revokeObjectURL(prev.galleryPreviews[indexToRemove].src);
+      }
 
       return {
         ...prev,
@@ -71,41 +130,50 @@ export default function CreateProjectPage() {
     });
   };
 
-  const router = useRouter();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.content || !formData.mainImage) {
-      toast.error("عنوان، محتوا و تصویر اصلی الزامی هستند");
+    if (!formData.title || !formData.content) {
+      toast.error("عنوان و محتوا الزامی هستند");
       return;
     }
 
     try {
-      // استیت لودینگ بذار اگه خواستی
-      toast.loading("در حال ثبت نمونه‌کار...");
+      const loadingToast = toast.loading("در حال بروزرسانی نمونه‌کار...");
 
-      // ✅ 1. آپلود تصویر اصلی
-      const mainForm = new FormData();
-      mainForm.append("file", formData.mainImage);
+      // ساخت آبجکت آپدیت
+      const updateData: Partial<Portfolio> = {
+        title: formData.title,
+        shortDesc: formData.caption || undefined,
+        content: formData.content,
+      };
 
-      const thumbnailRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
-        {
-          method: "POST",
-          body: mainForm,
-        }
-      );
+      // اگر تصویر اصلی تغییر کرده بود
+      if (formData.mainImage) {
+        const mainForm = new FormData();
+        mainForm.append("file", formData.mainImage);
+        const thumbnailRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
+          {
+            method: "POST",
+            body: mainForm,
+          }
+        );
+        const { filePath } = await thumbnailRes.json();
+        updateData.thumbnail = filePath;
+      }
 
-      const { filePath: thumbnailUrl } = await thumbnailRes.json();
+      // آپلود تصاویر جدید گالری
+      const existingGalleryUrls = formData.galleryPreviews
+        .filter((preview) => !preview.src.startsWith("blob:"))
+        .map((preview) =>
+          preview.src.replace(`${process.env.NEXT_PUBLIC_API_URL}/uploads/`, "")
+        );
 
-      // ✅ 2. آپلود گالری (اگر وجود دارد)
-      const galleryUrls: string[] = [];
-
-      for (const file of formData.gallery) {
+      // آپلود تصاویر جدید
+      const newGalleryPromises = formData.gallery.map(async (file) => {
         const gForm = new FormData();
         gForm.append("file", file);
-
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
           {
@@ -113,40 +181,61 @@ export default function CreateProjectPage() {
             body: gForm,
           }
         );
-
         const { filePath } = await res.json();
-        galleryUrls.push(filePath);
-      }
-
-      // ✅ 3. ساخت نمونه‌کار
-      await portfolioApi.create({
-        title: formData.title,
-        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
-        thumbnail: thumbnailUrl,
-        shortDesc: formData.caption,
-        content: formData.content,
-        gallery: galleryUrls,
+        return filePath;
       });
 
-      toast.dismiss();
-      toast.success("نمونه‌کار با موفقیت ثبت شد ✅");
+      const newGalleryUrls = await Promise.all(newGalleryPromises);
 
-      // ✅ 4. ریدایرکت به لیست نمونه‌کارها
-      router.push("/admin/portfolios");
+      // اگر گالری تغییر کرده، اضافه کن
+      if (existingGalleryUrls.length > 0 || newGalleryUrls.length > 0) {
+        updateData.gallery = [...existingGalleryUrls, ...newGalleryUrls];
+      }
+
+      // حذف فیلدهای خالی
+      const filteredData = Object.fromEntries(
+        Object.entries(updateData).filter(
+          ([_, value]) =>
+            value !== undefined &&
+            value !== null &&
+            value !== "" &&
+            !(Array.isArray(value) && value.length === 0)
+        )
+      );
+
+      // اضافه کردن slug فقط اگر عنوان تغییر کرده
+      if (filteredData.title) {
+        filteredData.slug = filteredData.title
+          .replace(/\s+/g, "-")
+          .toLowerCase();
+      }
+
+      console.log("Sending update data:", filteredData); // برای debug
+
+      // ارسال درخواست آپدیت
+      await portfolioApi.update(Number(params.id), filteredData);
+
+      toast.dismiss(loadingToast);
+      toast.success("نمونه‌کار با موفقیت بروزرسانی شد");
+      router.push("/admin/dashboard/projects");
     } catch (error: any) {
-      toast.dismiss();
-      toast.error(error.message || "خطایی رخ داده است");
+      console.error("Update error:", error);
+      toast.error(error.message || "خطا در بروزرسانی نمونه‌کار");
     }
   };
+
+  if (loading) {
+    return <LoadingOverlay />;
+  }
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
       <div className="flex items-center gap-3 mb-4">
         <div className="bg-yellow-100 text-yellow-600 rounded-full p-2">
-          <MdAdd size={20} />
+          <MdEdit size={20} />
         </div>
         <h1 className="text-2xl font-extrabold text-gray-800">
-          افزودن نمونه‌کار جدید
+          ویرایش نمونه‌کار
         </h1>
       </div>
 
@@ -226,7 +315,7 @@ export default function CreateProjectPage() {
           type="submit"
           className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md transition"
         >
-          ثبت نمونه‌کار
+          بروزرسانی نمونه‌کار
         </button>
       </form>
 

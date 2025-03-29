@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/shared/Modal";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
+import toast from "react-hot-toast";
+import { serviceApi } from "@/lib/api/serviceApi";
 
 interface Service {
-  id: string;
+  id: number;
   title: string;
 }
 
@@ -13,25 +15,45 @@ export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTitle, setCurrentTitle] = useState("");
-  const [editId, setEditId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<number | null>(null);
 
-  const handleAddOrEdit = () => {
-    if (editId) {
-      // ویرایش
-      setServices((prev) =>
-        prev.map((s) => (s.id === editId ? { ...s, title: currentTitle } : s))
-      );
-    } else {
-      // افزودن جدید
-      setServices((prev) => [
-        ...prev,
-        { id: Date.now().toString(), title: currentTitle },
-      ]);
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    try {
+      const data = await serviceApi.getAll();
+      setServices(data);
+    } catch (error) {
+      toast.error("خطا در دریافت خدمات");
+    }
+  };
+
+  const handleAddOrEdit = async () => {
+    if (!currentTitle.trim()) {
+      toast.error("عنوان نمی‌تواند خالی باشد");
+      return;
     }
 
-    setCurrentTitle("");
-    setEditId(null);
-    setIsModalOpen(false);
+    try {
+      if (editId !== null) {
+        const updated = await serviceApi.update(editId, {
+          title: currentTitle,
+        });
+        setServices((prev) => prev.map((s) => (s.id === editId ? updated : s)));
+        toast.success("خدمت با موفقیت ویرایش شد");
+      } else {
+        const created = await serviceApi.create({ title: currentTitle });
+        setServices((prev) => [created, ...prev]);
+        toast.success("خدمت جدید اضافه شد");
+      }
+      setCurrentTitle("");
+      setEditId(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      toast.error("خطا در ذخیره خدمت");
+    }
   };
 
   const handleEdit = (service: Service) => {
@@ -40,8 +62,23 @@ export default function ServicesPage() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    setServices((prev) => prev.filter((s) => s.id !== id));
+  const handleDelete = async (id: number) => {
+    const service = services.find((s) => s.id === id);
+    if (!service) return;
+
+    const confirmed = window.confirm(
+      `آیا از حذف "${service.title}" اطمینان دارید؟`
+    );
+    if (!confirmed) return;
+
+    const toastId = toast.loading(`در حال حذف "${service.title}" ...`);
+    try {
+      await serviceApi.delete(id);
+      setServices((prev) => prev.filter((s) => s.id !== id));
+      toast.success("خدمت با موفقیت حذف شد", { id: toastId });
+    } catch (error) {
+      toast.error("خطا در حذف خدمت", { id: toastId });
+    }
   };
 
   return (

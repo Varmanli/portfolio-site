@@ -18,7 +18,7 @@ export function ImageUploader({
 }: ImageUploaderProps) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-gray-700 mb-2">
+      <label className="block text-sm font-semibold text-gray-700 mb-1">
         {label}
       </label>
 
@@ -35,13 +35,15 @@ export function ImageUploader({
       {preview && (
         <div className="mt-3 cursor-pointer" onClick={onPreviewClick}>
           <p className="text-xs text-gray-500 mb-1">پیش‌نمایش تصویر:</p>
-          <Image
-            src={preview}
-            alt="preview"
-            width={500}
-            height={200}
-            className="w-full h-56 object-cover rounded-lg border border-gray-200 shadow-sm"
-          />
+          <div className="relative w-full h-48">
+            <Image
+              src={preview}
+              alt="preview"
+              fill
+              className="object-cover rounded-lg"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
         </div>
       )}
     </div>

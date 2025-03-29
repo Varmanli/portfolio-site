@@ -30,16 +30,33 @@ import {
 import { useState, useEffect } from "react";
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
 
-export default function RichTextEditorWrapper(props: RichTextEditorProps) {
+interface RichTextEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  className?: string;
+}
+
+export default function RichTextEditor({
+  value,
+  onChange,
+  placeholder,
+  className,
+}: RichTextEditorProps) {
   return (
     <ErrorBoundary>
-      <RichTextEditorContent {...props} />
+      <RichTextEditorContent
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={className}
+      />
     </ErrorBoundary>
   );
 }
 
 function RichTextEditorContent({
-  content = "",
+  value,
   onChange,
   placeholder = "محتوا را اینجا بنویسید...",
   className = "",
@@ -89,7 +106,7 @@ function RichTextEditorContent({
         types: ["heading", "paragraph", "image"],
       }),
     ],
-    content,
+    content: value,
     editable,
     editorProps: {
       attributes: {
