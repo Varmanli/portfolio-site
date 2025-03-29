@@ -24,7 +24,7 @@ export default function Topbar() {
   }, []);
 
   return (
-    <div className="w-full h-16 bg-white shadow-sm rounded-t-2xl flex items-center justify-between px-6 border-b">
+    <div className="w-full h-16 bg-white shadow-sm flex items-center justify-between px-6 border-b">
       {/* تاریخ و خوش‌آمدگویی */}
       <div className="flex items-center gap-4">
         <div className="text-gray-800 text-lg font-bold whitespace-nowrap">

@@ -20,7 +20,7 @@ export default function DashboardLayout({
     <html lang="fa" dir="rtl">
       <body className="flex h-screen overflow-hidden bg-gray-100 text-gray-800">
         {/* Sidebar ثابت */}
-        <div className="w-64 flex-shrink-0">
+        <div className=" flex-shrink-0">
           <Sidebar />
         </div>
 

@@ -6,6 +6,7 @@ import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { ImageUploader } from "@/components/dashboard/projects/ImageUploader";
 import { Gallery } from "@/components/dashboard/projects/Gallery";
+import { RichTextEditor } from "@/components/shared/RichTextEditor";
 import { GalleryItem, ProjectFormData } from "@/types/project";
 import { generateUniqueId } from "@/utils/id";
 
@@ -52,24 +53,19 @@ export default function CreateProjectPage() {
     setFormData((prev) => {
       // Create new arrays without the removed item
       const newGallery = prev.gallery.filter((_, idx) => idx !== indexToRemove);
-      const newGalleryPreviews = prev.galleryPreviews.filter((_, idx) => idx !== indexToRemove);
-      
+      const newGalleryPreviews = prev.galleryPreviews.filter(
+        (_, idx) => idx !== indexToRemove
+      );
+
       // Revoke the object URL to prevent memory leaks
       URL.revokeObjectURL(prev.galleryPreviews[indexToRemove].src);
-      
+
       return {
         ...prev,
         gallery: newGallery,
         galleryPreviews: newGalleryPreviews,
       };
     });
-  };
-
-  const handleGalleryReorder = (newItems: GalleryItem[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      galleryPreviews: newItems,
-    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -100,7 +96,9 @@ export default function CreateProjectPage() {
           <input
             type="text"
             value={formData.title}
-            onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, title: e.target.value }))
+            }
             className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
             placeholder="مثلاً طراحی فروشگاه آنلاین"
           />
@@ -113,7 +111,9 @@ export default function CreateProjectPage() {
           <textarea
             rows={2}
             value={formData.caption}
-            onChange={(e) => setFormData((prev) => ({ ...prev, caption: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, caption: e.target.value }))
+            }
             className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
             placeholder="توضیح کوتاه درباره پروژه..."
           />
@@ -138,7 +138,6 @@ export default function CreateProjectPage() {
         <Gallery
           items={formData.galleryPreviews}
           onRemove={handleRemoveImage}
-          onReorder={handleGalleryReorder}
           onImageClick={(index) => {
             setLightboxIndex(index + (formData.mainPreview ? 1 : 0));
             setLightboxOpen(true);
@@ -149,12 +148,13 @@ export default function CreateProjectPage() {
           <label className="block text-sm font-semibold text-gray-700 mb-1">
             محتوای پروژه
           </label>
-          <textarea
-            rows={6}
-            value={formData.content}
-            onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
-            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
-            placeholder="توضیحات کامل پروژه..."
+          <RichTextEditor
+            content={formData.content}
+            onChange={(html) =>
+              setFormData((prev) => ({ ...prev, content: html }))
+            }
+            placeholder="توضیحات کامل پروژه را اینجا بنویسید..."
+            className="min-h-[400px]"
           />
         </div>
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiFillDashboard, AiFillSliders } from "react-icons/ai";
 import {
   MdDashboard,
@@ -33,9 +33,28 @@ const menuItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const toggleSidebar = () => setCollapsed(!collapsed);
+
+  // Don't render anything until mounted to prevent hydration issues
+  if (!mounted) {
+    return (
+      <div className="h-screen bg-white shadow-md w-64">
+        <div className="py-[12.3px] border-b">
+          <div className="flex items-center gap-2 px-4 py-2 text-gray-700 text-base font-semibold">
+            <MdDashboard size={20} className="text-gray-700" />
+            <span className="whitespace-nowrap text-[15px]">داشبورد</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
