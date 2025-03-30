@@ -3,19 +3,18 @@
 import { MdError } from "react-icons/md";
 
 interface FormErrorProps {
-  error: string | null;
+  errors: Record<string, string>;
   className?: string;
 }
 
-export default function FormError({ error, className = "" }: FormErrorProps) {
-  if (!error) return null;
-
+export default function FormError({ errors }: FormErrorProps) {
   return (
-    <div className={`bg-red-50 border border-red-200 rounded-lg p-4 ${className}`}>
-      <div className="flex items-center gap-2 text-red-700">
-        <MdError size={20} />
-        <p className="text-sm font-medium">{error}</p>
-      </div>
+    <div className="bg-red-100 text-red-700 p-3 rounded-md space-y-1">
+      {Object.entries(errors).map(([field, message]) => (
+        <p key={field}>
+          <strong>{field}:</strong> {message}
+        </p>
+      ))}
     </div>
   );
-} 
+}

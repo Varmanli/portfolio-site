@@ -26,8 +26,16 @@ export interface ContentSection {
   sectionType: "home" | "contact";
   createdAt?: string;
   updatedAt?: string;
+  isImage?: boolean;
 }
-
+export interface ContentFormProps {
+  section: ContentSection;
+  onSave: () => Promise<void>;
+  onCancel: () => void;
+  isLoading?: boolean;
+  formError?: string | null;
+  fieldErrors?: Record<string, string>;
+}
 /**
  * Interface for content data
  */
