@@ -7,11 +7,11 @@ import "yet-another-react-lightbox/styles.css";
 import { ImageUploader } from "@/components/dashboard/projects/ImageUploader";
 import { Gallery } from "@/components/dashboard/projects/Gallery";
 import RichTextEditor from "@/components/shared/RichTextEditor";
-import { GalleryItem, ProjectFormData } from "@/types/project";
+import { ProjectFormData } from "@/types/project";
 import { generateUniqueId } from "@/utils/id";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { portfolioApi } from "@/lib/api/portfolioApi"; 
+import { portfolioApi } from "@/lib/api/portfolioApi";
 
 export default function CreateProjectPage() {
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -133,9 +133,14 @@ export default function CreateProjectPage() {
 
       // ✅ 4. ریدایرکت به لیست نمونه‌کارها
       router.push("/admin/portfolios");
-    } catch (error: any) {
-      toast.dismiss();
-      toast.error(error.message || "خطایی رخ داده است");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.dismiss();
+        toast.error(error.message || "خطایی رخ داده است");
+      } else {
+        toast.dismiss();
+        toast.error("خطای ناشناخته‌ای رخ داده است");
+      }
     }
   };
 

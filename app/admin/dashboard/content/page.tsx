@@ -13,16 +13,20 @@ export default function ContentManagement() {
   const [sections, setSections] = useState<ContentSection[]>([]);
   const [activeTab, setActiveTab] = useState<"home" | "contact">("home");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // گرفتن دیتا از API در اولین بار
+  // گرفتن دیتا در بار اول
   useEffect(() => {
-    const fetchContent = async () => {
+    const fetchContent = async (): Promise<void> => {
       try {
         const data = await contentApi.getAll();
         setSections(data);
-      } catch (error: any) {
-        toast.error(error.message || "خطا در دریافت محتوای سایت");
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "خطای ناشناخته در دریافت محتوای سایت";
+        toast.error(message);
       } finally {
         setLoading(false);
       }
@@ -31,20 +35,29 @@ export default function ContentManagement() {
     fetchContent();
   }, []);
 
-  // ذخیره تغییرات محتوا
-  const handleSave = async (id: string, updatedSection: ContentSection) => {
+  // ذخیره تغییرات هر سکشن
+  const handleSave = async (
+    id: string,
+    updatedSection: ContentSection
+  ): Promise<void> => {
     const toastId = toast.loading("در حال ذخیره تغییرات...");
     try {
-      await contentApi.update(+id, updatedSection);
+      await contentApi.update(Number(id), updatedSection);
+
       setSections((prev) =>
         prev.map((section) =>
           section.id === id ? { ...section, ...updatedSection } : section
         )
       );
+
       toast.success("تغییرات ذخیره شد", { id: toastId });
       setEditingId(null);
-    } catch (error: any) {
-      toast.error(error.message || "خطا در ذخیره تغییرات", { id: toastId });
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "خطای ناشناخته در ذخیره تغییرات";
+      toast.error(message, { id: toastId });
     }
   };
 
@@ -67,24 +80,27 @@ export default function ContentManagement() {
         <div className="space-y-6">
           {sections
             .filter((section) => section.sectionType === activeTab)
-            .map((section) => (
-              <div key={section.id}>
-                {editingId === section.id ? (
-                  <ContentForm
-                    section={section}
-                    onSave={(updatedSection) =>
-                      handleSave(section.id, updatedSection)
-                    }
-                    onCancel={() => setEditingId(null)}
-                  />
-                ) : (
-                  <ContentDisplay
-                    section={section}
-                    onEdit={() => setEditingId(section.id)}
-                  />
-                )}
-              </div>
-            ))}
+            .map((section) => {
+              const isEditing = editingId === section.id;
+              return (
+                <div key={section.id}>
+                  {isEditing ? (
+                    <ContentForm
+                      section={section}
+                      onSave={async (updatedSection) =>
+                        await handleSave(section.id, updatedSection)
+                      }
+                      onCancel={() => setEditingId(null)}
+                    />
+                  ) : (
+                    <ContentDisplay
+                      section={section}
+                      onEdit={() => setEditingId(section.id)}
+                    />
+                  )}
+                </div>
+              );
+            })}
         </div>
       )}
     </div>

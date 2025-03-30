@@ -21,18 +21,18 @@ export default function ProjectsPage() {
     try {
       const data = await portfolioApi.getAll();
       setProjects(data);
-    } catch (error) {
-      toast.error("خطا در دریافت نمونه‌کارها");
     } finally {
       setLoading(false);
     }
   };
+
   const handleDelete = (project: Portfolio) => {
     toast.custom((t) => (
       <div className="bg-white rounded-xl border p-4 shadow-md w-full max-w-sm text-right">
         <p className="text-sm text-gray-700 mb-3">
-          آیا از حذف "<span className="font-bold">{project.title}</span>"
-          اطمینان دارید؟
+          آیا از حذف{" "}
+          <span className="font-bold">&quot;{project.title}&quot;</span> اطمینان
+          دارید؟
         </p>
         <div className="flex justify-end gap-2 mt-4">
           <button
@@ -52,7 +52,7 @@ export default function ProjectsPage() {
                 await portfolioApi.delete(project.id);
                 setProjects((prev) => prev.filter((p) => p.id !== project.id));
                 toast.success("نمونه‌کار با موفقیت حذف شد", { id: toastId });
-              } catch (error) {
+              } catch {
                 toast.error("خطا در حذف نمونه‌کار", { id: toastId });
               }
             }}
@@ -94,11 +94,13 @@ export default function ProjectsPage() {
             key={project.id}
             className="bg-white flex flex-col justify-between rounded-lg shadow-sm border p-4"
           >
-            <div className="relative w-full h-48 mb-4">
-              <img
+            <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden">
+              <Image
                 src={getImageUrl(project.thumbnail)}
                 alt={project.title}
-                className="w-full h-full object-cover rounded-lg"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
               />
             </div>
 

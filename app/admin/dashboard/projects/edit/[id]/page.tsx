@@ -7,7 +7,7 @@ import "yet-another-react-lightbox/styles.css";
 import { ImageUploader } from "@/components/dashboard/projects/ImageUploader";
 import { Gallery } from "@/components/dashboard/projects/Gallery";
 import RichTextEditor from "@/components/shared/RichTextEditor";
-import { GalleryItem, ProjectFormData } from "@/types/project";
+import { Portfolio, GalleryImage, ProjectFormData } from "@/types/project";
 import { generateUniqueId } from "@/utils/id";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -64,16 +64,19 @@ export default function EditProjectPage() {
           mainImage: null,
           mainPreview: getImageUrl(data.thumbnail),
           gallery: [],
-          galleryPreviews: data.gallery.map((item: any) => ({
-            id: item.id || generateUniqueId(),
-            // برای گالری هم از همون تابع استفاده می‌کنیم
+          galleryPreviews: data.gallery.map((item: GalleryImage) => ({
+            id: String(item.id ?? generateUniqueId()), // تبدیل به string
             src: getImageUrl(item.imageUrl),
           })),
           content: data.content || "",
         });
-      } catch (error: any) {
-        console.error("Load error:", error);
-        toast.error(error.message || "خطا در دریافت اطلاعات نمونه‌کار");
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Load error:", error);
+          toast.error(error.message || "خطا در دریافت اطلاعات نمونه‌کار");
+        } else {
+          toast.error("خطای ناشناخته");
+        }
         router.push("/admin/dashboard/projects");
       } finally {
         setLoading(false);
@@ -83,7 +86,7 @@ export default function EditProjectPage() {
     if (params.id) {
       loadProject();
     }
-  }, [params.id]);
+  }, [params.id, router]);
 
   const handleMainImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -205,7 +208,7 @@ export default function EditProjectPage() {
 
       // اضافه کردن slug فقط اگر عنوان تغییر کرده
       if (filteredData.title) {
-        filteredData.slug = filteredData.title
+        filteredData.slug = String(filteredData.title)
           .replace(/\s+/g, "-")
           .toLowerCase();
       }

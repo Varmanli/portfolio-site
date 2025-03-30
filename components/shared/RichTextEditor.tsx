@@ -42,6 +42,7 @@ export default function RichTextEditor({
   onChange,
   placeholder,
   className,
+  editable = true, 
 }: RichTextEditorProps) {
   return (
     <ErrorBoundary>
@@ -50,6 +51,7 @@ export default function RichTextEditor({
         onChange={onChange}
         placeholder={placeholder}
         className={className}
+        editable={editable} 
       />
     </ErrorBoundary>
   );

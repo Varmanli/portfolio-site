@@ -1,38 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MdDashboard } from "react-icons/md";
 import { Message } from "@/types/admin";
 import { MOCK_MESSAGES } from "@/constants/admin";
-import { messageApi } from "@/lib/api/admin";
 import Stats from "@/components/admin/dashboard/Stats";
 import RecentMessages from "@/components/admin/dashboard/RecentMessages";
 
-/**
- * Dashboard Page
- *
- * The main dashboard page showing overview statistics and recent messages.
- *
- * @returns {JSX.Element} The dashboard page component
- */
 export default function DashboardPage() {
-  const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
+  const [messages] = useState<Message[]>(MOCK_MESSAGES); // بدون setMessages
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        // TODO: Replace with actual API call
-        // const data = await messageApi.getAll();
-        // setMessages(data);
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMessages();
+    // فعلاً لودینگ فیکه، چون API نداری
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {

@@ -25,7 +25,7 @@ export default function ServicesPage() {
     try {
       const data = await serviceApi.getAll();
       setServices(data);
-    } catch (error) {
+    } catch {
       toast.error("خطا در دریافت خدمات");
     }
   };
@@ -51,7 +51,7 @@ export default function ServicesPage() {
       setCurrentTitle("");
       setEditId(null);
       setIsModalOpen(false);
-    } catch (error) {
+    } catch {
       toast.error("خطا در ذخیره خدمت");
     }
   };
@@ -76,7 +76,7 @@ export default function ServicesPage() {
       await serviceApi.delete(id);
       setServices((prev) => prev.filter((s) => s.id !== id));
       toast.success("خدمت با موفقیت حذف شد", { id: toastId });
-    } catch (error) {
+    } catch {
       toast.error("خطا در حذف خدمت", { id: toastId });
     }
   };

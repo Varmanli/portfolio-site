@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MdMessage } from "react-icons/md";
 import { Message } from "@/types/admin";
 import { messageApi } from "@/lib/api/admin";
@@ -11,12 +11,9 @@ import MessageList from "@/components/admin/messages/MessageList";
  * Messages Page
  *
  * A page for managing and displaying user messages.
- *
- * @returns {JSX.Element} The messages page component
  */
 export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -25,8 +22,6 @@ export default function MessagesPage() {
         setMessages(data);
       } catch (error) {
         showError(error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
