@@ -4,7 +4,6 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
-import { RichTextEditorProps } from "@/types/editor";
 import { createImagePreview, validateImage } from "@/utils/image";
 import {
   MdFormatBold,
@@ -35,6 +34,7 @@ interface RichTextEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  editable?: boolean; // ✅ اضافه کن اینو
 }
 
 export default function RichTextEditor({
