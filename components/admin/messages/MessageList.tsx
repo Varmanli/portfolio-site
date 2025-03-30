@@ -1,25 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { MdDelete, MdEmail, MdPerson, MdSubject } from "react-icons/md";
+import { MdDelete, MdEmail, MdSubject, MdPerson } from "react-icons/md";
 import momentJalaali from "moment-jalaali";
 import { Message } from "@/types/admin";
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
 import { showSuccess, showError } from "@/lib/utils/toast";
+
+type FilterStatus = "all" | "read" | "unread";
 
 interface MessageListProps {
   messages: Message[];
   onDelete: (id: string) => Promise<void>;
 }
 
-/**
- * MessageList Component
- *
- * A component for displaying a list of messages with their details.
- *
- * @param {MessageListProps} props - Component props
- * @returns {JSX.Element} The message list component
- */
 export default function MessageListWrapper({
   messages,
   onDelete,
@@ -31,8 +25,8 @@ export default function MessageListWrapper({
       setIsDeleting(id);
       await onDelete(id);
       showSuccess("پیام با موفقیت حذف شد");
-    } catch (error) {
-      showError(error);
+    } catch (err) {
+      showError(err);
     } finally {
       setIsDeleting(null);
     }
@@ -40,16 +34,28 @@ export default function MessageListWrapper({
 
   return (
     <ErrorBoundary>
-      <MessageListContent messages={messages} onDelete={handleDelete} />
+      <MessageListContent
+        messages={messages}
+        onDelete={handleDelete}
+        isDeleting={isDeleting}
+      />
     </ErrorBoundary>
   );
 }
 
-function MessageListContent({ messages, onDelete }: MessageListProps) {
+interface MessageListContentProps {
+  messages: Message[];
+  onDelete: (id: string) => Promise<void>;
+  isDeleting: string | null;
+}
+
+function MessageListContent({
+  messages,
+  onDelete,
+  isDeleting,
+}: MessageListContentProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<"all" | "read" | "unread">(
-    "all"
-  );
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
 
   const formatDate = (date: string) => {
     return momentJalaali(date).format("jYYYY/jMM/jDD HH:mm");
@@ -71,7 +77,7 @@ function MessageListContent({ messages, onDelete }: MessageListProps) {
 
   return (
     <div className="space-y-6">
-      {/* نوار جستجو و فیلتر */}
+      {/* جستجو و فیلتر */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <input
@@ -84,7 +90,7 @@ function MessageListContent({ messages, onDelete }: MessageListProps) {
         </div>
         <select
           value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value as any)}
+          onChange={(e) => setFilterStatus(e.target.value as FilterStatus)}
           className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
         >
           <option value="all">همه پیام‌ها</option>
@@ -134,7 +140,12 @@ function MessageListContent({ messages, onDelete }: MessageListProps) {
                 </span>
                 <button
                   onClick={() => onDelete(message.id)}
-                  className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors"
+                  disabled={isDeleting === message.id}
+                  className={`p-2 rounded-full transition-colors ${
+                    isDeleting === message.id
+                      ? "opacity-50 cursor-not-allowed"
+                      : "text-red-500 hover:text-red-700 hover:bg-red-50"
+                  }`}
                 >
                   <MdDelete size={20} />
                 </button>

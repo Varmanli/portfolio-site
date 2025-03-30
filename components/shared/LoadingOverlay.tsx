@@ -1,17 +1,11 @@
 "use client";
 
-import LoadingSpinner from "./LoadingSpinner";
-
 interface LoadingOverlayProps {
-  fullScreen?: boolean;
   message?: string;
-  transparent?: boolean;
 }
 
 export default function LoadingOverlay({
-  fullScreen = false,
   message = "در حال بارگذاری...",
-  transparent = false,
 }: LoadingOverlayProps) {
   return (
     <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50">

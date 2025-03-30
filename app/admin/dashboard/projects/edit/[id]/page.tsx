@@ -198,7 +198,7 @@ export default function EditProjectPage() {
       // حذف فیلدهای خالی
       const filteredData = Object.fromEntries(
         Object.entries(updateData).filter(
-          ([_, value]) =>
+          ([, value]) =>
             value !== undefined &&
             value !== null &&
             value !== "" &&
@@ -221,9 +221,14 @@ export default function EditProjectPage() {
       toast.dismiss(loadingToast);
       toast.success("نمونه‌کار با موفقیت بروزرسانی شد");
       router.push("/admin/dashboard/projects");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Update error:", error);
-      toast.error(error.message || "خطا در بروزرسانی نمونه‌کار");
+
+      if (error instanceof Error) {
+        toast.error(error.message || "خطا در بروزرسانی نمونه‌کار");
+      } else {
+        toast.error("خطای ناشناخته در بروزرسانی نمونه‌کار");
+      }
     }
   };
 

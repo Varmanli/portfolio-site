@@ -1,7 +1,5 @@
 "use client";
 
-import { MdError } from "react-icons/md";
-
 interface FormErrorProps {
   errors: Record<string, string>;
   className?: string;

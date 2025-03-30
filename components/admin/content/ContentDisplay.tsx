@@ -1,5 +1,6 @@
 import { MdEdit, MdImage } from "react-icons/md";
 import { ContentSection } from "@/types/admin";
+import Image from "next/image";
 
 interface ContentDisplayProps {
   section: ContentSection;
@@ -35,10 +36,12 @@ export default function ContentDisplay({
         {section.isImage ? (
           section.content ? (
             <div className="relative w-full h-48 rounded-lg overflow-hidden border">
-              <img
+              <Image
                 src={section.content}
                 alt={section.title}
-                className="w-full h-full object-contain"
+                width={800} // یا مقدار مناسب بر اساس طراحی
+                height={400} // یا مقدار مناسب بر اساس طراحی
+                className="w-full h-full object-contain rounded-lg"
               />
             </div>
           ) : (

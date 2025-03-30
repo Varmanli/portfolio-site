@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { GalleryItem } from "@/types/project";
 
 interface ImageUploaderProps {
   label: string;

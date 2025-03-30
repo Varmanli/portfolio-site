@@ -71,12 +71,16 @@ export interface SocialLinks {
  * Interface for site settings
  */
 export interface SiteSettings {
-  title: string;
-  description: string;
-  logo?: string;
-  socialLinks: SocialLinks;
+  siteTitle: string;
+  siteDescription: string;
   contactEmail: string;
+  socialLinks: {
+    instagram: string;
+    linkedin: string;
+    github: string;
+  };
 }
+
 
 /**
  * Interface for user messages
@@ -89,4 +93,9 @@ export interface Message {
   content: string;
   isRead: boolean;
   createdAt: string;
+}
+export interface SiteSettings {
+  siteTitle: string;
+  siteDescription: string;
+  // هر چی دیگه هم هست اضافه کن
 }

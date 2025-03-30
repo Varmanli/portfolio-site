@@ -17,6 +17,7 @@ interface ContentFormProps {
 
 interface ContentFormContentProps {
   section: ContentSection;
+  setFormData: React.Dispatch<React.SetStateAction<ContentSection>>;
   onSave: () => Promise<void>;
   onCancel: () => void;
   isLoading: boolean;
@@ -73,6 +74,7 @@ export default function ContentFormWrapper({
     <ErrorBoundary>
       <ContentFormContent
         section={formData}
+        setFormData={setFormData}
         onSave={handleSubmit}
         onCancel={onCancel}
         isLoading={isLoading}
@@ -85,19 +87,20 @@ export default function ContentFormWrapper({
 
 function ContentFormContent({
   section,
+  setFormData,
   onSave,
   onCancel,
   isLoading,
   formError,
   fieldErrors,
 }: ContentFormContentProps) {
-  const [content, setContent] = useState(section.content);
-
   return (
     <div className="space-y-4">
       <RichTextEditor
-        value={content}
-        onChange={setContent}
+        value={section.content}
+        onChange={(value) =>
+          setFormData((prev) => ({ ...prev, content: value }))
+        }
         placeholder="محتوا را وارد کنید..."
         className="min-h-[200px]"
       />

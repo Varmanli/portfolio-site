@@ -63,7 +63,9 @@ export default function SettingsForm({ settings, onSave }: SettingsFormProps) {
 
   return (
     <div className="space-y-6">
-      <FormError error={formError} className="mb-6" />
+      {formError && (
+        <FormError errors={{ general: formError }} className="mb-6" />
+      )}
 
       {/* تنظیمات عمومی */}
       <div className="bg-white p-6 rounded-lg shadow-sm border">

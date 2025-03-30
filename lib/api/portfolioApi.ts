@@ -1,4 +1,4 @@
-import { Portfolio, CreatePortfolioDto } from "@/types/portfolio";
+import { GalleryImage, Portfolio, CreatePortfolioDto } from "@/types/portfolio";
 import { ApiError, NetworkError } from "@/lib/errors";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -144,7 +144,7 @@ export const portfolioApi = {
         content: data.content || "",
         thumbnail: data.thumbnail || "",
         // تبدیل gallery به فرمت مورد نیاز
-        gallery: (data.gallery || []).map((item: any) => ({
+        gallery: (data.gallery || []).map((item: GalleryImage) => ({
           id: item.id,
           imageUrl: item.imageUrl,
           portfolioId: item.portfolioId,

@@ -1,10 +1,5 @@
 import { Service } from "@/types/service";
-import {
-  ApiError,
-  NetworkError,
-  ValidationError,
-  NotFoundError,
-} from "@/types/errors";
+import { ApiError, NetworkError, ValidationError } from "@/types/errors";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/services`;
 
@@ -17,7 +12,7 @@ export const serviceApi = {
       const res = await fetch(BASE_URL);
       if (!res.ok) throw new Error("خطا در دریافت سرویس‌ها");
       return await res.json();
-    } catch (error) {
+    } catch {
       throw new NetworkError("ارتباط با سرور برقرار نشد");
     }
   },
@@ -26,11 +21,11 @@ export const serviceApi = {
    * ساخت سرویس جدید
    */
   create: async (data: { title: string }): Promise<Service> => {
-    try {
-      if (!data.title) {
-        throw new ValidationError("عنوان نمی‌تواند خالی باشد");
-      }
+    if (!data.title) {
+      throw new ValidationError("عنوان نمی‌تواند خالی باشد");
+    }
 
+    try {
       const res = await fetch(BASE_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -39,7 +34,7 @@ export const serviceApi = {
 
       if (!res.ok) throw new Error("خطا در ساخت سرویس جدید");
       return await res.json();
-    } catch (error) {
+    } catch {
       throw new ApiError("خطا در ساخت سرویس");
     }
   },
@@ -57,7 +52,7 @@ export const serviceApi = {
 
       if (!res.ok) throw new Error("خطا در ویرایش سرویس");
       return await res.json();
-    } catch (error) {
+    } catch {
       throw new ApiError("خطا در ویرایش سرویس");
     }
   },
@@ -72,7 +67,7 @@ export const serviceApi = {
       });
 
       if (!res.ok) throw new Error("خطا در حذف سرویس");
-    } catch (error) {
+    } catch {
       throw new ApiError("خطا در حذف سرویس");
     }
   },

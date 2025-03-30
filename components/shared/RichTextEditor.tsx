@@ -18,7 +18,6 @@ import {
   MdFormatAlignLeft,
   MdFormatAlignCenter,
   MdFormatAlignRight,
-  MdDelete,
 } from "react-icons/md";
 import {
   BsTypeH1,
@@ -60,7 +59,6 @@ export default function RichTextEditor({
 function RichTextEditorContent({
   value,
   onChange,
-  placeholder = "محتوا را اینجا بنویسید...",
   className = "",
   editable = true,
 }: RichTextEditorProps) {

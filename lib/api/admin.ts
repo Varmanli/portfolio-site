@@ -33,13 +33,13 @@ export const messageApi = {
    * @param id - The ID of the message to fetch
    * @returns Promise<Message> The requested message
    */
-  getById: async (id: string): Promise<Message> => {
+  getById: async (): Promise<Message> => {
     try {
       // TODO: Implement API call to get message by ID
       throw new Error("Not implemented");
     } catch (error) {
       if (error instanceof Error) {
-        throw new NotFoundError(`پیام با شناسه ${id} یافت نشد`);
+        throw new NotFoundError(`پیام با شناسه  یافت نشد`);
       }
       throw new NetworkError("خطا در ارتباط با سرور");
     }
@@ -51,6 +51,7 @@ export const messageApi = {
    * @returns Promise<void>
    */
   delete: async (id: string): Promise<void> => {
+    void id; // 👈 این خط فقط برای ساکت کردن ESLint هست
     try {
       // TODO: Implement API call to delete message
       throw new Error("Not implemented");
@@ -67,7 +68,7 @@ export const messageApi = {
    * @param id - The ID of the message to mark as read
    * @returns Promise<void>
    */
-  markAsRead: async (id: string): Promise<void> => {
+  markAsRead: async (): Promise<void> => {
     try {
       // TODO: Implement API call to mark message as read
       throw new Error("Not implemented");
@@ -151,13 +152,13 @@ export const contentApi = {
    * @param id - The ID of the content section to fetch
    * @returns Promise<ContentSection> The requested content section
    */
-  getById: async (id: string): Promise<ContentSection> => {
+  getById: async (): Promise<ContentSection> => {
     try {
       // TODO: Implement API call to get content section by ID
       throw new Error("Not implemented");
     } catch (error) {
       if (error instanceof Error) {
-        throw new NotFoundError(`بخش محتوا با شناسه ${id} یافت نشد`);
+        throw new NotFoundError(`بخش محتوا با شناسه$ یافت نشد`);
       }
       throw new NetworkError("خطا در ارتباط با سرور");
     }
@@ -169,7 +170,7 @@ export const contentApi = {
    * @param content - New content to save
    * @returns Promise<void>
    */
-  update: async (id: string, content: ContentSection): Promise<void> => {
+  update: async (_id: string, content: ContentSection): Promise<void> => {
     try {
       if (!content.title || !content.content) {
         throw new ValidationError("عنوان و محتوا نمی‌تواند خالی باشد");
@@ -192,7 +193,7 @@ export const contentApi = {
    * @param id - The ID of the content section to delete
    * @returns Promise<void>
    */
-  delete: async (id: string): Promise<void> => {
+  delete: async (): Promise<void> => {
     try {
       // TODO: Implement API call to delete content section
       throw new Error("Not implemented");
@@ -210,7 +211,7 @@ export const contentApi = {
    * @param file - The image file to upload
    * @returns Promise<string> The URL of the uploaded image
    */
-  uploadImage: async (id: string, file: File): Promise<string> => {
+  uploadImage: async (_id: string, file: File): Promise<string> => {
     try {
       if (!file) {
         throw new ValidationError("فایلی برای آپلود انتخاب نشده است");

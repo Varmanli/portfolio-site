@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { AiFillDashboard, AiFillSliders } from "react-icons/ai";
+import { AiFillSliders } from "react-icons/ai";
 import {
   MdDashboard,
   MdWork,

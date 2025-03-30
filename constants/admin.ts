@@ -1,4 +1,4 @@
-import { Message, SiteSettings, ContentSection } from "@/types/admin";
+import { Message, ContentSection, SiteSettings } from "@/types/admin";
 
 /**
  * Mock data for messages
@@ -32,6 +32,7 @@ export const MOCK_MESSAGES: Message[] = [
 export const MOCK_SETTINGS: SiteSettings = {
   siteTitle: "ملیکا شمیرانی",
   siteDescription: "پورتفولیو شخصی",
+  contactEmail: "melika@example.com",
   socialLinks: {
     instagram: "https://instagram.com/example",
     linkedin: "https://linkedin.com/in/example",
@@ -46,50 +47,58 @@ export const MOCK_SETTINGS: SiteSettings = {
 export const MOCK_CONTENT_SECTIONS: ContentSection[] = [
   {
     id: "1",
-    type: "home",
+    sectionType: "home",
+    contentType: "text",
     title: "معرفی اولیه",
     content: "سلام من ملیکا شمیرانی هستم",
   },
   {
     id: "2",
-    type: "home",
+    sectionType: "home",
+    contentType: "text",
     title: "درباره من",
     content: "متن معرفی کوتاه در صفحه اصلی",
   },
   {
     id: "3",
-    type: "home",
+    sectionType: "home",
+    contentType: "image",
     title: "عکس پروفایل",
     content: "",
     isImage: true,
   },
   {
     id: "4",
-    type: "home",
+    sectionType: "home",
+    contentType: "text",
     title: "متن دکمه",
     content: "مشاهده نمونه کارها",
   },
   {
     id: "5",
-    type: "contact",
+    sectionType: "contact",
+    contentType: "text",
     title: "توضیحات",
     content: "متن کامل درباره من در صفحه تماس",
   },
   {
     id: "6",
-    type: "contact",
+    sectionType: "contact",
+    contentType: "text",
     title: "شماره تماس",
     content: "شماره تماس شما",
   },
   {
     id: "7",
-    type: "contact",
+    sectionType: "contact",
+    contentType: "text",
     title: "ایمیل",
     content: "ایمیل شما",
   },
   {
     id: "8",
-    type: "contact",
+    sectionType: "contact",
+    contentType: "text",
     title: "محل زندگی",
     content: "آدرس محل زندگی",
   },

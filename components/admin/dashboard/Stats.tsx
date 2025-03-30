@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  MdMessage,
-  MdPerson,
-  MdSettings,
-  MdContentPaste,
-} from "react-icons/md";
+import { MdMessage, MdContentPaste } from "react-icons/md";
 import { Message } from "@/types/admin";
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
 

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { MdSettings } from "react-icons/md";
 import { SiteSettings } from "@/types/admin";
 import { MOCK_SETTINGS } from "@/constants/admin";
-import { settingsApi } from "@/lib/api/admin";
 import SettingsForm from "@/components/admin/settings/SettingsForm";
 
 /**
