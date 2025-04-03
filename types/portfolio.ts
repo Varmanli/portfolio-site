@@ -10,7 +10,7 @@ export interface Portfolio {
   shortDesc: string;
   content: string;
   thumbnail: string;
-  gallery: GalleryImage[];
+  gallery: GalleryImage[]; // این بمونه چون برای گرفتن پروژه کامل لازمه
   createdAt: string;
   updatedAt?: string;
 }
@@ -21,7 +21,6 @@ export interface CreatePortfolioDto {
   thumbnail: string;
   shortDesc: string;
   content: string;
-  gallery: string[];
 }
 
 export interface UpdatePortfolioDto extends Partial<CreatePortfolioDto> {}

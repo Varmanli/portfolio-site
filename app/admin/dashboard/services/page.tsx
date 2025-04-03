@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Modal from "@/components/shared/Modal";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import toast from "react-hot-toast";
-import { serviceApi } from "@/lib/api/serviceApi";
+import axios from "axios";
 
 interface Service {
   id: number;
@@ -18,17 +18,23 @@ export default function ServicesPage() {
   const [editId, setEditId] = useState<number | null>(null);
 
   useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/services`,
+          {
+            withCredentials: true, // اگه نیاز به اعتبارسنجی کوکی داری
+          }
+        );
+        setServices(res.data);
+      } catch (err) {
+        toast.error("خطا در دریافت خدمات");
+        console.error(err);
+      }
+    };
+
     fetchServices();
   }, []);
-
-  const fetchServices = async () => {
-    try {
-      const data = await serviceApi.getAll();
-      setServices(data);
-    } catch {
-      toast.error("خطا در دریافت خدمات");
-    }
-  };
 
   const handleAddOrEdit = async () => {
     if (!currentTitle.trim()) {
@@ -38,21 +44,29 @@ export default function ServicesPage() {
 
     try {
       if (editId !== null) {
-        const updated = await serviceApi.update(editId, {
-          title: currentTitle,
-        });
+        const { data: updated } = await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/services/${editId}`,
+          { title: currentTitle },
+          { withCredentials: true } // اگه لاگین باشه و کوکی نیاز داشته باشه
+        );
         setServices((prev) => prev.map((s) => (s.id === editId ? updated : s)));
         toast.success("خدمت با موفقیت ویرایش شد");
       } else {
-        const created = await serviceApi.create({ title: currentTitle });
+        const { data: created } = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/services`,
+          { title: currentTitle },
+          { withCredentials: true }
+        );
         setServices((prev) => [created, ...prev]);
         toast.success("خدمت جدید اضافه شد");
       }
+
       setCurrentTitle("");
       setEditId(null);
       setIsModalOpen(false);
-    } catch {
+    } catch (err) {
       toast.error("خطا در ذخیره خدمت");
+      console.error(err);
     }
   };
 
@@ -72,15 +86,19 @@ export default function ServicesPage() {
     if (!confirmed) return;
 
     const toastId = toast.loading(`در حال حذف "${service.title}" ...`);
+
     try {
-      await serviceApi.delete(id);
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/services/${id}`, {
+        withCredentials: true, // اگه auth داشته باشی لازمه
+      });
+
       setServices((prev) => prev.filter((s) => s.id !== id));
       toast.success("خدمت با موفقیت حذف شد", { id: toastId });
-    } catch {
+    } catch (err) {
       toast.error("خطا در حذف خدمت", { id: toastId });
+      console.error(err);
     }
   };
-
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">

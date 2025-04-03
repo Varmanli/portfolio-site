@@ -3,7 +3,7 @@ import Image from "next/image";
 interface ImageUploaderProps {
   label: string;
   preview?: string;
-  onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onImageChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPreviewClick?: () => void;
   multiple?: boolean;
 }

@@ -1,10 +1,10 @@
 "use client";
 
+import axios from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
-import { portfolioApi } from "@/lib/api/portfolioApi";
 import { Portfolio } from "@/types/portfolio";
 import toast from "react-hot-toast";
 import LoadingOverlay from "@/components/shared/LoadingOverlay";
@@ -13,26 +13,31 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<Portfolio[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/portfolios`, {
+          withCredentials: true,
+        });
+        setProjects(res.data);
+      } catch (error) {
+        toast.error("خطا در دریافت نمونه‌کارها");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadProjects();
   }, []);
-
-  const loadProjects = async () => {
-    try {
-      const data = await portfolioApi.getAll();
-      setProjects(data);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = (project: Portfolio) => {
     toast.custom((t) => (
       <div className="bg-white rounded-xl border p-4 shadow-md w-full max-w-sm text-right">
         <p className="text-sm text-gray-700 mb-3">
-          آیا از حذف{" "}
-          <span className="font-bold">&quot;{project.title}&quot;</span> اطمینان
-          دارید؟
+          آیا از حذف <span className="font-bold">"{project.title}"</span>{" "}
+          اطمینان دارید؟
         </p>
         <div className="flex justify-end gap-2 mt-4">
           <button
@@ -49,7 +54,9 @@ export default function ProjectsPage() {
               );
 
               try {
-                await portfolioApi.delete(project.id);
+                await axios.delete(`${API_BASE}/portfolios/${project.id}`, {
+                  withCredentials: true, // این خط خیلی مهمه 👈
+                });
                 setProjects((prev) => prev.filter((p) => p.id !== project.id));
                 toast.success("نمونه‌کار با موفقیت حذف شد", { id: toastId });
               } catch {
@@ -65,15 +72,13 @@ export default function ProjectsPage() {
     ));
   };
 
-  const getImageUrl = (path: string) => {
+  const getImageUrl = (path: string): string => {
     if (!path) return "/images/placeholder.jpg";
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    return `${process.env.NEXT_PUBLIC_API_URL}/${cleanPath}`;
+    if (path.startsWith("http")) return path;
+    return `${API_BASE}/${path}`;
   };
 
-  if (loading) {
-    return <LoadingOverlay />;
-  }
+  if (loading) return <LoadingOverlay />;
 
   return (
     <div className="p-6">

@@ -1,22 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { MdDashboard } from "react-icons/md";
 import { Message } from "@/types/admin";
-import { MOCK_MESSAGES } from "@/constants/admin";
 import Stats from "@/components/admin/dashboard/Stats";
 import RecentMessages from "@/components/admin/dashboard/RecentMessages";
+import { showError } from "@/lib/utils/toast";
 
 export default function DashboardPage() {
-  const [messages] = useState<Message[]>(MOCK_MESSAGES); // بدون setMessages
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // فعلاً لودینگ فیکه، چون API نداری
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get<Message[]>(
+          `${process.env.NEXT_PUBLIC_API_URL}/contact`,
+          { withCredentials: true } // ⬅️ خیلی مهم برای احراز هویت
+        );
+        setMessages(response.data);
+      } catch (error) {
+        showError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMessages();
   }, []);
 
   if (isLoading) {

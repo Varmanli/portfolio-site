@@ -18,6 +18,7 @@
     "@tiptap/extension-text-align": "^2.11.6",
     "@tiptap/react": "^2.11.6",
     "@tiptap/starter-kit": "^2.11.6",
+    "axios": "^1.8.4",
     "lottie-react": "^2.4.1",
     "moment-jalaali": "^0.10.4",
     "next": "15.2.4",

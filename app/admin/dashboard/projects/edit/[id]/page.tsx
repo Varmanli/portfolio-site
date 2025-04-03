@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { ImageUploader } from "@/components/dashboard/projects/ImageUploader";
+import { ImageUploader } from "@/components/ui/ImageUploader";
 import { Gallery } from "@/components/dashboard/projects/Gallery";
 import RichTextEditor from "@/components/shared/RichTextEditor";
 import { Portfolio, GalleryImage, ProjectFormData } from "@/types/project";
 import { generateUniqueId } from "@/utils/id";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { portfolioApi } from "@/lib/api/portfolioApi";
 import LoadingOverlay from "@/components/shared/LoadingOverlay";
+import axios from "axios";
 
 export default function EditProjectPage() {
   const router = useRouter();
@@ -55,8 +55,12 @@ export default function EditProjectPage() {
   useEffect(() => {
     const loadProject = async () => {
       try {
-        const data = await portfolioApi.getById(Number(params.id));
-        console.log("Received data:", data);
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/portfolio/${params.id}`,
+          {
+            withCredentials: true,
+          }
+        );
 
         setFormData({
           title: data.title || "",
@@ -65,27 +69,20 @@ export default function EditProjectPage() {
           mainPreview: getImageUrl(data.thumbnail),
           gallery: [],
           galleryPreviews: data.gallery.map((item: GalleryImage) => ({
-            id: String(item.id ?? generateUniqueId()), // تبدیل به string
+            id: String(item.id),
             src: getImageUrl(item.imageUrl),
           })),
           content: data.content || "",
         });
       } catch (error) {
-        if (error instanceof Error) {
-          console.error("Load error:", error);
-          toast.error(error.message || "خطا در دریافت اطلاعات نمونه‌کار");
-        } else {
-          toast.error("خطای ناشناخته");
-        }
+        toast.error("خطا در دریافت اطلاعات نمونه‌کار");
         router.push("/admin/dashboard/projects");
       } finally {
         setLoading(false);
       }
     };
 
-    if (params.id) {
-      loadProject();
-    }
+    if (params.id) loadProject();
   }, [params.id, router]);
 
   const handleMainImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,91 +141,56 @@ export default function EditProjectPage() {
     try {
       const loadingToast = toast.loading("در حال بروزرسانی نمونه‌کار...");
 
-      // ساخت آبجکت آپدیت
-      const updateData: Partial<Portfolio> = {
+      const updateData: any = {
         title: formData.title,
-        shortDesc: formData.caption || undefined,
+        shortDesc: formData.caption,
         content: formData.content,
       };
 
-      // اگر تصویر اصلی تغییر کرده بود
       if (formData.mainImage) {
         const mainForm = new FormData();
         mainForm.append("file", formData.mainImage);
-        const thumbnailRes = await fetch(
+        const { data } = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
-          {
-            method: "POST",
-            body: mainForm,
-          }
+          mainForm
         );
-        const { filePath } = await thumbnailRes.json();
-        updateData.thumbnail = filePath;
+        updateData.thumbnail = data.filePath;
       }
 
-      // آپلود تصاویر جدید گالری
       const existingGalleryUrls = formData.galleryPreviews
         .filter((preview) => !preview.src.startsWith("blob:"))
         .map((preview) =>
           preview.src.replace(`${process.env.NEXT_PUBLIC_API_URL}/uploads/`, "")
         );
 
-      // آپلود تصاویر جدید
-      const newGalleryPromises = formData.gallery.map(async (file) => {
-        const gForm = new FormData();
-        gForm.append("file", file);
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
-          {
-            method: "POST",
-            body: gForm,
-          }
-        );
-        const { filePath } = await res.json();
-        return filePath;
-      });
+      const newGalleryUrls = await Promise.all(
+        formData.gallery.map(async (file) => {
+          const form = new FormData();
+          form.append("file", file);
+          const { data } = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
+            form
+          );
+          return data.filePath;
+        })
+      );
 
-      const newGalleryUrls = await Promise.all(newGalleryPromises);
-
-      // اگر گالری تغییر کرده، اضافه کن
       if (existingGalleryUrls.length > 0 || newGalleryUrls.length > 0) {
         updateData.gallery = [...existingGalleryUrls, ...newGalleryUrls];
       }
 
-      // حذف فیلدهای خالی
-      const filteredData = Object.fromEntries(
-        Object.entries(updateData).filter(
-          ([, value]) =>
-            value !== undefined &&
-            value !== null &&
-            value !== "" &&
-            !(Array.isArray(value) && value.length === 0)
-        )
+      updateData.slug = formData.title.replace(/\s+/g, "-").toLowerCase();
+
+      await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/portfolio/${params.id}`,
+        updateData
       );
-
-      // اضافه کردن slug فقط اگر عنوان تغییر کرده
-      if (filteredData.title) {
-        filteredData.slug = String(filteredData.title)
-          .replace(/\s+/g, "-")
-          .toLowerCase();
-      }
-
-      console.log("Sending update data:", filteredData); // برای debug
-
-      // ارسال درخواست آپدیت
-      await portfolioApi.update(Number(params.id), filteredData);
 
       toast.dismiss(loadingToast);
       toast.success("نمونه‌کار با موفقیت بروزرسانی شد");
       router.push("/admin/dashboard/projects");
-    } catch (error: unknown) {
-      console.error("Update error:", error);
-
-      if (error instanceof Error) {
-        toast.error(error.message || "خطا در بروزرسانی نمونه‌کار");
-      } else {
-        toast.error("خطای ناشناخته در بروزرسانی نمونه‌کار");
-      }
+    } catch (err) {
+      toast.error("خطا در بروزرسانی نمونه‌کار");
     }
   };
 

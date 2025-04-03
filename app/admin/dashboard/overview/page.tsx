@@ -1,23 +1,51 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { MdMessage, MdBuild, MdWork, MdAddCircleOutline } from "react-icons/md";
 import Link from "next/link";
+import { showError } from "@/lib/utils/toast";
+import axios from "axios";
 
 export default function OverviewPage() {
+  const [counts, setCounts] = useState({
+    messageCount: 0,
+    serviceCount: 0,
+    portfolioCount: 0,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/stats`,
+          {
+            withCredentials: true,
+          }
+        );
+
+        setCounts(data);
+      } catch (error) {
+        showError(error);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   const stats = [
     {
       label: "پیام‌ها",
-      value: 2,
+      value: counts.messageCount,
       icon: <MdMessage size={22} />,
     },
     {
       label: "خدمات",
-      value: 5,
+      value: counts.serviceCount,
       icon: <MdBuild size={22} />,
     },
     {
       label: "نمونه‌کارها",
-      value: 12,
+      value: counts.portfolioCount,
       icon: <MdWork size={22} />,
     },
   ];
@@ -47,15 +75,13 @@ export default function OverviewPage() {
             className="bg-white rounded-2xl shadow p-5 flex flex-col justify-between"
           >
             <div className="flex items-center justify-between">
-              {/* عنوان بالا */}
-              <p className="text-gray-500 text-lg font-semibold ">
+              <p className="text-gray-500 text-lg font-semibold">
                 {item.label}
               </p>
               <div className="bg-yellow-100 text-yellow-500 p-3 rounded-full">
                 {item.icon}
               </div>
             </div>
-            {/* عدد و آیکون در یک ردیف */}
             <div className="flex justify-center items-center mt-5">
               <p className="text-4xl font-extrabold text-gray-800 text-center">
                 {item.value}

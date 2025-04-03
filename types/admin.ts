@@ -81,7 +81,6 @@ export interface SiteSettings {
   };
 }
 
-
 /**
  * Interface for user messages
  */
@@ -90,7 +89,7 @@ export interface Message {
   name: string;
   email: string;
   subject: string;
-  content: string;
+  message: string;
   isRead: boolean;
   createdAt: string;
 }

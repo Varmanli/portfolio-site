@@ -153,7 +153,7 @@ function MessageListContent({
             </div>
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <p className="text-gray-700 whitespace-pre-wrap">
-                {message.content}
+                {message.message}
               </p>
             </div>
           </div>

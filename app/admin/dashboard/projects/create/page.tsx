@@ -1,17 +1,17 @@
 "use client";
 
+import axios from "axios";
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { ImageUploader } from "@/components/dashboard/projects/ImageUploader";
+import { ImageUploader } from "@/components/ui/ImageUploader";
 import { Gallery } from "@/components/dashboard/projects/Gallery";
 import RichTextEditor from "@/components/shared/RichTextEditor";
 import { ProjectFormData } from "@/types/project";
 import { generateUniqueId } from "@/utils/id";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { portfolioApi } from "@/lib/api/portfolioApi";
 
 export default function CreateProjectPage() {
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -82,65 +82,62 @@ export default function CreateProjectPage() {
     }
 
     try {
-      // استیت لودینگ بذار اگه خواستی
       toast.loading("در حال ثبت نمونه‌کار...");
 
-      // ✅ 1. آپلود تصویر اصلی
+      // 🟡 1. آپلود تصویر اصلی
       const mainForm = new FormData();
       mainForm.append("file", formData.mainImage);
 
-      const thumbnailRes = await fetch(
+      const thumbnailRes = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
+        mainForm,
         {
-          method: "POST",
-          body: mainForm,
+          withCredentials: true, // 👈 این حتماً باشه
+        }
+      );
+      const thumbnailUrl = thumbnailRes.data.filePath;
+
+      // 🟡 2. ساخت نمونه‌کار
+      const portfolioRes = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/portfolio`,
+        {
+          title: formData.title,
+          slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
+          thumbnail: thumbnailUrl,
+          shortDesc: formData.caption,
+          content: formData.content,
         }
       );
 
-      const { filePath: thumbnailUrl } = await thumbnailRes.json();
+      const portfolioId = portfolioRes.data.id;
 
-      // ✅ 2. آپلود گالری (اگر وجود دارد)
-      const galleryUrls: string[] = [];
+      // 🟡 3. آپلود گالری اگر وجود دارد
+      if (formData.gallery.length > 0) {
+        for (const file of formData.gallery) {
+          const galleryForm = new FormData();
+          galleryForm.append("file", file);
 
-      for (const file of formData.gallery) {
-        const gForm = new FormData();
-        gForm.append("file", file);
+          const galleryUploadRes = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
+            galleryForm
+          );
 
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
-          {
-            method: "POST",
-            body: gForm,
-          }
-        );
+          const imageUrl = galleryUploadRes.data.filePath;
 
-        const { filePath } = await res.json();
-        galleryUrls.push(filePath);
+          // ارسال آدرس به گالری
+          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/gallery`, {
+            portfolioId,
+            imageUrl,
+          });
+        }
       }
-
-      // ✅ 3. ساخت نمونه‌کار
-      await portfolioApi.create({
-        title: formData.title,
-        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
-        thumbnail: thumbnailUrl,
-        shortDesc: formData.caption,
-        content: formData.content,
-        gallery: galleryUrls,
-      });
 
       toast.dismiss();
       toast.success("نمونه‌کار با موفقیت ثبت شد ✅");
-
-      // ✅ 4. ریدایرکت به لیست نمونه‌کارها
-      router.push("/admin/portfolios");
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.dismiss();
-        toast.error(error.message || "خطایی رخ داده است");
-      } else {
-        toast.dismiss();
-        toast.error("خطای ناشناخته‌ای رخ داده است");
-      }
+      router.push("/admin/dashboard/projects/");
+    } catch (error: any) {
+      toast.dismiss();
+      toast.error(error?.message || "خطایی رخ داده است");
     }
   };
 

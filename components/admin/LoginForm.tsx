@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { LoginFormData, LoginFormErrors } from "@/types/admin";
-
+import usePostData from "@/hooks/fetchData/usePostData";
+import axios from "axios";
 /**
  * LoginForm Component
  *
@@ -61,10 +62,25 @@ export default function LoginForm() {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    // شبیه‌سازی درخواست
-    await new Promise((res) => setTimeout(res, 1000));
-    setIsLoading(false);
-    alert("ورود موفقیت‌آمیز بود ✅");
+
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+        formData,
+        { withCredentials: true } // برای کوکی
+      );
+
+      // همه‌چی خوب بود:
+      window.location.href = "/admin/dashboard";
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "ورود ناموفق بود",
+        password: "اطلاعات ورود اشتباه است",
+      }));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
