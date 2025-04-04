@@ -109,12 +109,14 @@ export default function CreateProjectPage() {
       const portfolioId = portfolioRes.data.id;
 
       // 🟡 3. ثبت گالری
-      const galleryImages = uploadedImages.slice(1);
+      const galleryImages = uploadedImages.slice(1); // چون اولی thumbnail هست
 
-      for (const img of galleryImages) {
+      if (galleryImages.length > 0) {
         await api.post("/gallery", {
           portfolioId,
-          imageUrl: img.filePath,
+          images: galleryImages.map(
+            (img: { filePath: string }) => img.filePath
+          ),
         });
       }
       console.log([...allImagesForm]);
