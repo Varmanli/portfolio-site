@@ -152,7 +152,7 @@ export default function EditProjectPage() {
       // 🟡 1. آپلود تصویر اصلی در صورت وجود
       if (formData.mainImage) {
         const mainForm = new FormData();
-        mainForm.append("file", formData.mainImage);
+        mainForm.append("files", formData.mainImage);
 
         try {
           const { data } = await axios.post(
