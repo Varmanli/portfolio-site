@@ -7,8 +7,6 @@ import { Message } from "@/types/admin";
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
 import { showSuccess, showError } from "@/lib/utils/toast";
 
-type FilterStatus = "all" | "read" | "unread";
-
 interface MessageListProps {
   messages: Message[];
   onDelete: (id: string) => Promise<void>;
@@ -54,32 +52,14 @@ function MessageListContent({
   onDelete,
   isDeleting,
 }: MessageListContentProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
-
   const formatDate = (date: string) => {
     return momentJalaali(date).format("jYYYY/jMM/jDD HH:mm");
   };
 
-  const filteredMessages = messages.filter((message) => {
-    const matchesSearch =
-      message.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      message.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      message.subject.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesStatus =
-      filterStatus === "all" ||
-      (filterStatus === "read" && message.isRead) ||
-      (filterStatus === "unread" && !message.isRead);
-
-    return matchesSearch && matchesStatus;
-  });
-
   return (
     <div className="space-y-6">
-      {/* لیست پیام‌ها */}
       <div className="space-y-4">
-        {filteredMessages.map((message) => (
+        {messages.map((message) => (
           <div
             key={message.id}
             className={`bg-white p-6 rounded-lg shadow-sm border ${
