@@ -146,25 +146,29 @@ export default function EditProjectPage() {
         title: formData.title,
         shortDesc: formData.caption,
         content: formData.content,
+        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
       };
 
       if (formData.mainImage) {
         const mainForm = new FormData();
         mainForm.append("file", formData.mainImage);
+
         const { data } = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
           mainForm
         );
+
         updateData.thumbnail = data.filePath;
       }
 
-      const existingGalleryUrls = formData.galleryPreviews
-        .filter((preview) => !preview.src.startsWith("blob:"))
-        .map((preview) =>
-          preview.src.replace(`${process.env.NEXT_PUBLIC_API_URL}/upload/images`, "")
-        );
+      // 🟡 آپدیت نمونه‌کار
+      const { data: updatedPortfolio } = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.id}`,
+        updateData
+      );
 
-      const newGalleryUrls = await Promise.all(
+      // 🟡 آپلود تصاویر گالری جدید
+      const newGalleryUrls: string[] = await Promise.all(
         formData.gallery.map(async (file) => {
           const form = new FormData();
           form.append("file", file);
@@ -176,22 +180,32 @@ export default function EditProjectPage() {
         })
       );
 
-      if (existingGalleryUrls.length > 0 || newGalleryUrls.length > 0) {
-        updateData.gallery = [...existingGalleryUrls, ...newGalleryUrls];
+      const existingGalleryUrls = formData.galleryPreviews
+        .filter((preview) => !preview.src.startsWith("blob:"))
+        .map((preview) => preview.src);
+
+      const finalGallery = [...existingGalleryUrls, ...newGalleryUrls];
+
+      // 🟡 ارسال گالری به اندپوینت مخصوص
+      if (finalGallery.length > 0) {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/gallery`, {
+          portfolioId: updatedPortfolio.id || params.id,
+          images: finalGallery,
+        });
       }
 
-      updateData.slug = formData.title.replace(/\s+/g, "-").toLowerCase();
-
-      await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.id}`,
-        updateData
-      );
-
       toast.dismiss(loadingToast);
-      toast.success("نمونه‌کار با موفقیت بروزرسانی شد");
+      toast.success("نمونه‌کار با موفقیت بروزرسانی شد ✅");
       router.push("/admin/dashboard/projects");
-    } catch {
-      toast.error("خطا در بروزرسانی نمونه‌کار");
+    } catch (error) {
+      toast.dismiss();
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "خطای سرور");
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("خطای ناشناخته‌ای رخ داده است");
+      }
     }
   };
 
