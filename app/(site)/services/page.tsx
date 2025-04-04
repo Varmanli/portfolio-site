@@ -1,14 +1,27 @@
 import { Header } from "@/components/shared/Header";
 import StarIcon from "@/components/ui/StarIcon";
+import axios from "axios";
 
-/**
- * Services Page Component
- * Displays a list of services offered with decorative elements
- *
- * @component
- * @returns {JSX.Element} Rendered services page
- */
-export default function ServicesPage() {
+type Service = {
+  id: number;
+  title: string;
+};
+
+export default async function ServicesPage() {
+  let services: Service[] = [];
+
+  try {
+    const { data } = await axios.get<Service[]>(
+      `${process.env.NEXT_PUBLIC_API_URL}/services`,
+      {
+        withCredentials: true,
+      }
+    );
+    services = data;
+  } catch (error) {
+    console.error("خطا در دریافت اطلاعات نمونه‌کار:", error);
+  }
+
   return (
     <>
       <Header />
@@ -18,7 +31,11 @@ export default function ServicesPage() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 lg:gap-15 lg:mx-20">
-          {/* داده‌ها به‌زودی از API دریافت می‌شوند */}
+          {services.map((service) => (
+            <div key={service.id} className="p-4 border rounded">
+              <h3 className="font-bold text-xl mb-2">{service.title}</h3>
+            </div>
+          ))}
         </div>
       </section>
       <StarIcon
