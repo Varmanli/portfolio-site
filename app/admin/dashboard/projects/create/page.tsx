@@ -92,11 +92,7 @@ export default function CreateProjectPage() {
         allImagesForm.append("files", file);
       });
 
-      const uploadRes = await api.post("/upload/images", allImagesForm, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const uploadRes = await api.post("/upload/images", allImagesForm);
 
       const uploadedImages = uploadRes.data;
       const thumbnailUrl = uploadedImages[0].filePath;
@@ -121,7 +117,7 @@ export default function CreateProjectPage() {
           imageUrl: img.filePath,
         });
       }
-
+      console.log([...allImagesForm]);
       toast.dismiss();
       toast.success("نمونه‌کار با موفقیت ثبت شد ✅");
       router.push("/admin/dashboard/projects/");

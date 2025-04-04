@@ -77,28 +77,6 @@ function MessageListContent({
 
   return (
     <div className="space-y-6">
-      {/* جستجو و فیلتر */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="flex-1">
-          <input
-            type="text"
-            placeholder="جستجو در پیام‌ها..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          />
-        </div>
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value as FilterStatus)}
-          className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-        >
-          <option value="all">همه پیام‌ها</option>
-          <option value="read">خوانده شده</option>
-          <option value="unread">خوانده نشده</option>
-        </select>
-      </div>
-
       {/* لیست پیام‌ها */}
       <div className="space-y-4">
         {filteredMessages.map((message) => (
