@@ -194,7 +194,7 @@ export default function EditProjectPage() {
             updatedPortfolio.id || params.id
           }`,
           {
-            images: finalGallery,
+            "images": finalGallery,
           }
         );
 
