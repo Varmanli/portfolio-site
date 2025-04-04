@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { LoginFormData, LoginFormErrors } from "@/types/admin";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 /**
  * LoginForm Component
  *
@@ -12,6 +13,7 @@ import axios from "axios";
  * @returns {JSX.Element} The login form component
  */
 export default function LoginForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -59,7 +61,7 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-
+    console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
     setIsLoading(true);
     try {
       await axios.post(
@@ -68,7 +70,7 @@ export default function LoginForm() {
         { withCredentials: true }
       );
 
-      window.location.href = "/admin/dashboard";
+      router.push("/admin/dashboard");
     } catch {
       setErrors((prev) => ({
         ...prev,
