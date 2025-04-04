@@ -159,7 +159,12 @@ export default function EditProjectPage() {
             `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
             mainForm
           );
-          updateData.thumbnail = data.filePath;
+
+          if (data.filePath) {
+            updateData.thumbnail = data.filePath;
+          } else {
+            console.error("No filePath returned for main image");
+          }
         } catch (error) {
           console.error("Error uploading main image", error);
           toast.error("خطا در آپلود تصویر اصلی");
@@ -186,7 +191,13 @@ export default function EditProjectPage() {
                 `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
                 form
               );
-              return data.filePath;
+
+              if (data.filePath) {
+                return data.filePath;
+              } else {
+                console.error("No filePath returned for gallery image");
+                return null;
+              }
             } catch (error) {
               console.error("Error uploading gallery image", error);
               toast.error("خطا در آپلود یکی از تصاویر گالری");
@@ -194,7 +205,7 @@ export default function EditProjectPage() {
             }
           })
         )
-      ).filter((url) => url !== null && url !== undefined); // حذف مقادیر null/undefined
+      ).filter((url): url is string => url !== null && url !== undefined); // حذف مقادیر null/undefined
 
       // 🟡 4. ترکیب تصاویر قدیمی و جدید
       const existingGalleryUrls = formData.galleryPreviews
