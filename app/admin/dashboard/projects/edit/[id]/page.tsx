@@ -152,7 +152,7 @@ export default function EditProjectPage() {
         const mainForm = new FormData();
         mainForm.append("file", formData.mainImage);
         const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
+          `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
           mainForm
         );
         updateData.thumbnail = data.filePath;
@@ -161,7 +161,7 @@ export default function EditProjectPage() {
       const existingGalleryUrls = formData.galleryPreviews
         .filter((preview) => !preview.src.startsWith("blob:"))
         .map((preview) =>
-          preview.src.replace(`${process.env.NEXT_PUBLIC_API_URL}/uploads/`, "")
+          preview.src.replace(`${process.env.NEXT_PUBLIC_API_URL}/upload/images`, "")
         );
 
       const newGalleryUrls = await Promise.all(
@@ -169,7 +169,7 @@ export default function EditProjectPage() {
           const form = new FormData();
           form.append("file", file);
           const { data } = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
+            `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
             form
           );
           return data.filePath;
@@ -183,7 +183,7 @@ export default function EditProjectPage() {
       updateData.slug = formData.title.replace(/\s+/g, "-").toLowerCase();
 
       await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/portfolio/${params.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.id}`,
         updateData
       );
 
