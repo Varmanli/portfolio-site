@@ -70,7 +70,9 @@ export default function LoginForm() {
         { withCredentials: true }
       );
 
-      router.push("/admin/dashboard");
+      setTimeout(() => {
+        router.push("/admin/dashboard");
+      }, 300);
     } catch {
       setErrors((prev) => ({
         ...prev,

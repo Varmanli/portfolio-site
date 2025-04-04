@@ -5,17 +5,17 @@ const protectedRoutes = ["/admin"];
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("admin_token")?.value;
-
   const pathname = req.nextUrl.pathname;
 
-  // ❌ از محافظت خارج کردن مسیر لاگین
-  if (pathname === "/admin/login") {
+  // ❌ مسیرهایی که نباید بررسی بشن
+  const publicPaths = ["/admin/login"];
+  const isPublic = publicPaths.some((path) => pathname.startsWith(path));
+
+  if (isPublic) {
     return NextResponse.next();
   }
 
-  const isProtected = protectedRoutes.some((path) =>
-    pathname.startsWith(path)
-  );
+  const isProtected = protectedRoutes.some((path) => pathname.startsWith(path));
 
   if (isProtected && !token) {
     return NextResponse.redirect(new URL("/admin/login", req.url));
