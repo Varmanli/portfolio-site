@@ -41,7 +41,6 @@ export default function ContactPage() {
   };
   return (
     <>
-      <Toaster />
       <Header />
       <section className="z-10 relative flex flex-col-reverse gap-15 items-center justify-center p-4  lg:flex-row lg:items-start lg:gap-20 lg:px-20 w-full max-w-[1440px] mx-auto">
         <div className="px-4 lg:w-2/5 space-y-10 text-right">

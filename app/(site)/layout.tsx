@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { PageMetadata } from "@/types/pageContent";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata & PageMetadata = {
   title: "Melika shemirani",
@@ -18,6 +19,7 @@ export default function RootLayout({
         className="antialiased font-sans bg-black p-[8px] lg:p-[20px]"
         suppressHydrationWarning
       >
+        <Toaster position="top-center" reverseOrder={false} />
         <div className="bg-background min-h-screen w-full pb-10">
           {children}
         </div>
