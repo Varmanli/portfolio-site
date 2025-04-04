@@ -149,6 +149,7 @@ export default function EditProjectPage() {
         slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
       };
 
+      // آپلود تصویر اصلی
       if (formData.mainImage) {
         const mainForm = new FormData();
         mainForm.append("file", formData.mainImage);
@@ -161,13 +162,13 @@ export default function EditProjectPage() {
         updateData.thumbnail = data.filePath;
       }
 
-      // 🟡 آپدیت نمونه‌کار
+      // آپدیت نمونه‌کار
       const { data: updatedPortfolio } = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.id}`,
         updateData
       );
 
-      // 🟡 آپلود تصاویر گالری جدید
+      // آپلود تصاویر جدید گالری
       const newGalleryUrls: string[] = await Promise.all(
         formData.gallery.map(async (file) => {
           const form = new FormData();
@@ -186,12 +187,21 @@ export default function EditProjectPage() {
 
       const finalGallery = [...existingGalleryUrls, ...newGalleryUrls];
 
-      // 🟡 ارسال گالری به اندپوینت مخصوص
+      // ارسال گالری به اندپوینت مخصوص PATCH برای بروزرسانی گالری
       if (finalGallery.length > 0) {
-        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/gallery`, {
-          portfolioId: updatedPortfolio.id || params.id,
-          images: finalGallery,
-        });
+        const { data } = await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/gallery/${
+            updatedPortfolio.id || params.id
+          }`,
+          {
+            images: finalGallery,
+          }
+        );
+
+        // بررسی پاسخ دریافت شده از API
+        if (data.updatedImages?.count > 0) {
+          toast.success("گالری با موفقیت بروزرسانی شد ✅");
+        }
       }
 
       toast.dismiss(loadingToast);
