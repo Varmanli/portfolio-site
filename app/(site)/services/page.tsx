@@ -1,6 +1,5 @@
 import { Header } from "@/components/shared/Header";
 import StarIcon from "@/components/ui/StarIcon";
-import axios from "axios";
 import Image from "next/image";
 
 type Service = {

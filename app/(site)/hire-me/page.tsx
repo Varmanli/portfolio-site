@@ -95,12 +95,15 @@ export default function ContactPage() {
             <LottieIcon src={HireMeAnim} loop sizeMobile={110} />
           </div>
 
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <label className="font-bold text-right">نام شما:</label>
             <input
               type="text"
-              className="border-2 border-[#656ED3] bg-white  rounded-md p-2"
+              className="border-2 border-[#656ED3] bg-white rounded-md p-2"
               placeholder="مثلاً ملیکا"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
             />
 
             <label className="font-bold text-right">ایمیل شما:</label>
@@ -108,6 +111,9 @@ export default function ContactPage() {
               type="email"
               className="border-2 border-[#656ED3] bg-white rounded-md p-2"
               placeholder="ایمیل فعال خود را وارد کنید"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
 
             <label className="font-bold text-right">پیام شما:</label>
@@ -115,6 +121,9 @@ export default function ContactPage() {
               rows={5}
               className="border-2 border-[#656ED3] bg-white rounded-md p-2"
               placeholder="سلام، من علاقه‌مند به همکاری هستم..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
             />
 
             <button
