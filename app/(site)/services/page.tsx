@@ -12,13 +12,14 @@ export default async function ServicesPage() {
   let services: Service[] = [];
 
   try {
-    const { data } = await axios.get<Service[]>(
-      `${process.env.NEXT_PUBLIC_API_URL}/services`,
-      {
-        withCredentials: true,
-      }
-    );
-    services = data;
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services`, {
+      cache: "no-store", // باعث می‌شود همیشه درخواست جدید ارسال شود
+      credentials: "include",
+    });
+
+    if (!res.ok) throw new Error("خطا در دریافت اطلاعات");
+
+    services = await res.json();
   } catch (error) {
     console.error("خطا در دریافت اطلاعات نمونه‌کار:", error);
   }
@@ -35,7 +36,7 @@ export default async function ServicesPage() {
           {services.map((service) => (
             <div
               key={service.id}
-              className="flex justify-between items-center gap-4 p-5 border-4 border-black bg-white  shadow-xl shadow-black/60"
+              className="flex justify-between items-center gap-4 p-5 border-4 border-black bg-white shadow-xl shadow-black/60"
             >
               <span className="lg:text-2xl font-semibold">{service.title}</span>
               <Image

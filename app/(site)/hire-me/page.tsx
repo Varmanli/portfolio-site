@@ -1,3 +1,5 @@
+"use client";
+
 import { Header } from "@/components/shared/Header";
 import { FaPhoneAlt, FaTelegram, FaWhatsapp } from "react-icons/fa";
 import HireMeAnim from "@/assets/animations/hireme.json";
@@ -5,8 +7,38 @@ import LottieIcon from "@/components/ui/LottieIcon";
 import { IoMdMail } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { ContactRow } from "@/components/shared/ContactRow";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function ContactPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (!res.ok) throw new Error("ارسال با مشکل مواجه شد");
+
+      toast.success("پیام با موفقیت ارسال شد! 🙌");
+      // پاک‌سازی فرم
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (error) {
+      toast.error("مشکلی در ارسال پیام پیش آمد");
+      console.error(error);
+    }
+  };
   return (
     <>
       <Header />
