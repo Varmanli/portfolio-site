@@ -160,6 +160,8 @@ export default function EditProjectPage() {
         );
         updateData.thumbnail = data.filePath;
       }
+      console.log("Updating Portfolio ID:", params.id);
+      console.log("Update Data:", updateData);
 
       // آپدیت نمونه‌کار
       const { data: updatedPortfolio } = await axios.patch(
@@ -191,7 +193,7 @@ export default function EditProjectPage() {
         .map((preview) => preview.src);
 
       const finalGallery = [...existingGalleryUrls, ...newGalleryUrls];
-
+      console.log("Final Gallery:", finalGallery);
       // ارسال گالری به اندپوینت مخصوص PATCH برای بروزرسانی گالری
       if (finalGallery.length > 0) {
         const { data } = await axios.patch(
