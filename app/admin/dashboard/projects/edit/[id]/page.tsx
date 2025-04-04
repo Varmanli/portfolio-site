@@ -158,7 +158,6 @@ export default function EditProjectPage() {
           `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
           mainForm
         );
-
         updateData.thumbnail = data.filePath;
       }
 
@@ -173,11 +172,17 @@ export default function EditProjectPage() {
         formData.gallery.map(async (file) => {
           const form = new FormData();
           form.append("files", file);
-          const { data } = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
-            form
-          );
-          return data.filePath;
+          try {
+            const { data } = await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
+              form
+            );
+            return data.filePath;
+          } catch (error) {
+            console.error("Error uploading image", error);
+            toast.error("خطا در آپلود تصویر");
+            return null;
+          }
         })
       );
 
@@ -194,11 +199,10 @@ export default function EditProjectPage() {
             updatedPortfolio.id || params.id
           }`,
           {
-            "images": finalGallery,
+            images: finalGallery,
           }
         );
 
-        // بررسی پاسخ دریافت شده از API
         if (data.updatedImages?.count > 0) {
           toast.success("گالری با موفقیت بروزرسانی شد ✅");
         }
