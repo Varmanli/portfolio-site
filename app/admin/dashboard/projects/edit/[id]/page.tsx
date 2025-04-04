@@ -172,7 +172,7 @@ export default function EditProjectPage() {
       const newGalleryUrls: string[] = await Promise.all(
         formData.gallery.map(async (file) => {
           const form = new FormData();
-          form.append("file", file);
+          form.append("files", file);
           const { data } = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
             form
