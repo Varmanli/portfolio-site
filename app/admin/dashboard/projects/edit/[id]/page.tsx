@@ -57,7 +57,7 @@ export default function EditProjectPage() {
     const loadProject = async () => {
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/portfolio/${params.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.id}`,
           {
             withCredentials: true,
           }

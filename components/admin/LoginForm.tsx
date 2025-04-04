@@ -61,7 +61,6 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
     setIsLoading(true);
     try {
       await axios.post(
@@ -69,10 +68,7 @@ export default function LoginForm() {
         formData,
         { withCredentials: true }
       );
-
-      setTimeout(() => {
-        router.push("/admin/dashboard");
-      }, 300);
+      router.push("/admin/dashboard");
     } catch {
       setErrors((prev) => ({
         ...prev,
