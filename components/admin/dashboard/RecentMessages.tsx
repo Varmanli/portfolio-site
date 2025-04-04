@@ -63,7 +63,7 @@ function RecentMessagesContent({ messages }: RecentMessagesProps) {
               <MdEmail className="text-gray-500" size={20} />
               <span className="text-gray-600">{message.email}</span>
             </div>
-            <p className="mt-2 text-gray-700 line-clamp-2">{message.content}</p>
+            <p className="mt-2 text-gray-700 line-clamp-2">{message.message}</p>
           </div>
         ))}
       </div>

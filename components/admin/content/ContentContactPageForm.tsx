@@ -8,8 +8,14 @@ interface contactPageFromTypes {
   contact_phone: string;
   contact_email: string;
   contact_city: string;
+  [key: string]: string;
 }
+type Primitive = string | number | boolean | null | undefined;
 
+interface KeyValueItem {
+  key: string;
+  value: string;
+}
 export default function ContentContactPageForm() {
   const [contactPageFrom, setContactPageForm] = useState<contactPageFromTypes>({
     contact_desc: "",
@@ -29,24 +35,25 @@ export default function ContentContactPageForm() {
   };
 
   const toKeyValueArray = (
-    data: Record<string, any>,
+    data: { [key: string]: Primitive },
     skipKeys: string[] = []
-  ) => {
+  ): KeyValueItem[] => {
     return Object.entries(data)
       .filter(([key]) => !skipKeys.includes(key))
       .map(([key, value]) => ({
         key,
-        value: String(value),
+        value: value != null ? String(value) : "",
       }));
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       toast.loading("در حال ذخیره اطلاعات...");
 
-      const payload = toKeyValueArray(contactPageFrom);
+      const payload = toKeyValueArray(
+        contactPageFrom as Record<string, Primitive>
+      );
 
       for (const item of payload) {
         await axios.post(
@@ -63,9 +70,9 @@ export default function ContentContactPageForm() {
 
       toast.dismiss();
       toast.success("✅ اطلاعات با موفقیت ذخیره شد");
-    } catch (err: any) {
+    } catch {
       toast.dismiss();
-      toast.error(`❌ ${err.message || "خطایی رخ داد"}`);
+      toast.error(`❌ "خطایی رخ داد"}`);
     }
   };
 

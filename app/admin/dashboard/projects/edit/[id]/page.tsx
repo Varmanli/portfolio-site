@@ -7,12 +7,13 @@ import "yet-another-react-lightbox/styles.css";
 import { ImageUploader } from "@/components/ui/ImageUploader";
 import { Gallery } from "@/components/dashboard/projects/Gallery";
 import RichTextEditor from "@/components/shared/RichTextEditor";
-import { Portfolio, GalleryImage, ProjectFormData } from "@/types/project";
+import { GalleryImage, ProjectFormData } from "@/types/project";
 import { generateUniqueId } from "@/utils/id";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import LoadingOverlay from "@/components/shared/LoadingOverlay";
 import axios from "axios";
+import { Portfolio } from "@/types/portfolio";
 
 export default function EditProjectPage() {
   const router = useRouter();
@@ -74,7 +75,7 @@ export default function EditProjectPage() {
           })),
           content: data.content || "",
         });
-      } catch (error) {
+      } catch {
         toast.error("خطا در دریافت اطلاعات نمونه‌کار");
         router.push("/admin/dashboard/projects");
       } finally {
@@ -141,7 +142,7 @@ export default function EditProjectPage() {
     try {
       const loadingToast = toast.loading("در حال بروزرسانی نمونه‌کار...");
 
-      const updateData: any = {
+      const updateData: Partial<Portfolio> = {
         title: formData.title,
         shortDesc: formData.caption,
         content: formData.content,
@@ -189,7 +190,7 @@ export default function EditProjectPage() {
       toast.dismiss(loadingToast);
       toast.success("نمونه‌کار با موفقیت بروزرسانی شد");
       router.push("/admin/dashboard/projects");
-    } catch (err) {
+    } catch {
       toast.error("خطا در بروزرسانی نمونه‌کار");
     }
   };

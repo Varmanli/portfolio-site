@@ -22,7 +22,7 @@ export default function ProjectsPage() {
           withCredentials: true,
         });
         setProjects(res.data);
-      } catch (error) {
+      } catch {
         toast.error("خطا در دریافت نمونه‌کارها");
       } finally {
         setLoading(false);
@@ -30,13 +30,13 @@ export default function ProjectsPage() {
     };
 
     loadProjects();
-  }, []);
+  }, [API_BASE]);
 
   const handleDelete = (project: Portfolio) => {
     toast.custom((t) => (
       <div className="bg-white rounded-xl border p-4 shadow-md w-full max-w-sm text-right">
         <p className="text-sm text-gray-700 mb-3">
-          آیا از حذف <span className="font-bold">"{project.title}"</span>{" "}
+          آیا از حذف <span className="font-bold">{project.title}</span>
           اطمینان دارید؟
         </p>
         <div className="flex justify-end gap-2 mt-4">

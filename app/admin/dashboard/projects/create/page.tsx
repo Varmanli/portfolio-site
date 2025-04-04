@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 import Lightbox from "yet-another-react-lightbox";
@@ -12,6 +11,8 @@ import { ProjectFormData } from "@/types/project";
 import { generateUniqueId } from "@/utils/id";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { api } from "@/lib/api";
+import axios from "axios";
 
 export default function CreateProjectPage() {
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -84,60 +85,56 @@ export default function CreateProjectPage() {
     try {
       toast.loading("در حال ثبت نمونه‌کار...");
 
-      // 🟡 1. آپلود تصویر اصلی
-      const mainForm = new FormData();
-      mainForm.append("file", formData.mainImage);
+      // 🟡 1. آپلود همه تصاویر
+      const allImagesForm = new FormData();
+      allImagesForm.append("files", formData.mainImage);
+      formData.gallery.forEach((file) => {
+        allImagesForm.append("files", file);
+      });
 
-      const thumbnailRes = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
-        mainForm,
-        {
-          withCredentials: true, // 👈 این حتماً باشه
-        }
-      );
-      const thumbnailUrl = thumbnailRes.data.filePath;
+      const uploadRes = await api.post("/upload/images", allImagesForm, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const uploadedImages = uploadRes.data;
+      const thumbnailUrl = uploadedImages[0].filePath;
 
       // 🟡 2. ساخت نمونه‌کار
-      const portfolioRes = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/portfolio`,
-        {
-          title: formData.title,
-          slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
-          thumbnail: thumbnailUrl,
-          shortDesc: formData.caption,
-          content: formData.content,
-        }
-      );
+      const portfolioRes = await api.post("/portfolios", {
+        title: formData.title,
+        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
+        thumbnail: thumbnailUrl,
+        shortDesc: formData.caption,
+        content: formData.content,
+      });
 
       const portfolioId = portfolioRes.data.id;
 
-      // 🟡 3. آپلود گالری اگر وجود دارد
-      if (formData.gallery.length > 0) {
-        for (const file of formData.gallery) {
-          const galleryForm = new FormData();
-          galleryForm.append("file", file);
+      // 🟡 3. ثبت گالری
+      const galleryImages = uploadedImages.slice(1);
 
-          const galleryUploadRes = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
-            galleryForm
-          );
-
-          const imageUrl = galleryUploadRes.data.filePath;
-
-          // ارسال آدرس به گالری
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/gallery`, {
-            portfolioId,
-            imageUrl,
-          });
-        }
+      for (const img of galleryImages) {
+        await api.post("/gallery", {
+          portfolioId,
+          imageUrl: img.filePath,
+        });
       }
 
       toast.dismiss();
       toast.success("نمونه‌کار با موفقیت ثبت شد ✅");
       router.push("/admin/dashboard/projects/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss();
-      toast.error(error?.message || "خطایی رخ داده است");
+
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "خطای سرور");
+      } else if (error instanceof Error) {
+        toast.error(error.message || "خطایی رخ داده است");
+      } else {
+        toast.error("خطای ناشناخته‌ای رخ داده است");
+      }
     }
   };
 

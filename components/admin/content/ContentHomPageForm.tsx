@@ -8,6 +8,7 @@ interface mainPageFormType {
   home_title: string;
   home_desc: string;
 }
+type Primitive = string | number | boolean | null | undefined;
 
 export default function ContentHomPageForm() {
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
@@ -17,7 +18,7 @@ export default function ContentHomPageForm() {
     home_desc: "",
   });
   const toKeyValueArray = (
-    data: Record<string, any>,
+    data: Record<string, Primitive>,
     skipKeys: string[] = []
   ) => {
     return Object.entries(data)
@@ -65,10 +66,22 @@ export default function ContentHomPageForm() {
       );
 
       return res.data.filePath;
-    } catch (err: any) {
-      toast.error(
-        `❌ خطا در آپلود عکس: ${err?.response?.data?.message || err.message}`
-      );
+    } catch (err: unknown) {
+      if (typeof err === "object" && err !== null && "response" in err) {
+        const error = err as {
+          response?: { data?: { message?: string } };
+          message?: string;
+        };
+        toast.error(
+          `❌ خطا در آپلود عکس: ${
+            error.response?.data?.message || error.message || "خطای ناشناخته"
+          }`
+        );
+      } else if (err instanceof Error) {
+        toast.error(`❌ ${err.message}`);
+      } else {
+        toast.error("❌ خطای ناشناخته");
+      }
       return null;
     }
   };
@@ -107,11 +120,24 @@ export default function ContentHomPageForm() {
 
       toast.dismiss();
       toast.success("✅ محتوا با موفقیت ذخیره شد");
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.dismiss();
-      toast.error(
-        `❌ ${err?.response?.data?.message || err.message || "خطایی رخ داد"}`
-      );
+
+      if (typeof err === "object" && err !== null && "response" in err) {
+        const error = err as {
+          response?: { data?: { message?: string } };
+          message?: string;
+        };
+        toast.error(
+          `❌ ${
+            error.response?.data?.message || error.message || "خطایی رخ داد"
+          }`
+        );
+      } else if (err instanceof Error) {
+        toast.error(`❌ ${err.message}`);
+      } else {
+        toast.error("❌ خطای ناشناخته‌ای رخ داده است");
+      }
     }
   };
 

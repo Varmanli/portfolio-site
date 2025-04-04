@@ -9,6 +9,7 @@ export interface Portfolio {
   title: string;
   shortDesc: string;
   content: string;
+  slug: string;
   thumbnail: string;
   gallery: GalleryImage[]; // این بمونه چون برای گرفتن پروژه کامل لازمه
   createdAt: string;

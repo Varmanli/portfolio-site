@@ -5,7 +5,7 @@ import ContentContactPageForm from "@/components/admin/content/ContentContactPag
 import ContentHomPageForm from "@/components/admin/content/ContentHomPageForm";
 import ContentTabs from "@/components/admin/content/ContentTabs";
 
-export default function page() {
+export default function LoginPage() {
   const [activeTab, setActiveTab] = useState<"home" | "contact">("home");
 
   return (
