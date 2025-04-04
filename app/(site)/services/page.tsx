@@ -1,6 +1,7 @@
 import { Header } from "@/components/shared/Header";
 import StarIcon from "@/components/ui/StarIcon";
 import axios from "axios";
+import Image from "next/image";
 
 type Service = {
   id: number;
@@ -32,8 +33,17 @@ export default async function ServicesPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 lg:gap-15 lg:mx-20">
           {services.map((service) => (
-            <div key={service.id} className="p-4 border rounded">
-              <h3 className="font-bold text-xl mb-2">{service.title}</h3>
+            <div
+              key={service.id}
+              className="flex justify-between items-center gap-4 p-5 border-4 border-black bg-white  shadow-xl shadow-black/60"
+            >
+              <span className="lg:text-2xl font-semibold">{service.title}</span>
+              <Image
+                src="/Service-icon.svg"
+                alt="icon"
+                width={38}
+                height={38}
+              />
             </div>
           ))}
         </div>
