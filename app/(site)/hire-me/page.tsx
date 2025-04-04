@@ -8,7 +8,7 @@ import { IoMdMail } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { ContactRow } from "@/components/shared/ContactRow";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -41,6 +41,7 @@ export default function ContactPage() {
   };
   return (
     <>
+      <Toaster />
       <Header />
       <section className="z-10 relative flex flex-col-reverse gap-15 items-center justify-center p-4  lg:flex-row lg:items-start lg:gap-20 lg:px-20 w-full max-w-[1440px] mx-auto">
         <div className="px-4 lg:w-2/5 space-y-10 text-right">
