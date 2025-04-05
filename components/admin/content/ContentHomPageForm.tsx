@@ -68,9 +68,7 @@ export default function ContentHomPageForm() {
         }));
 
         if (mappedData.home_image) {
-          setPreviewUrl(
-            `${process.env.NEXT_PUBLIC_API_URL}${mappedData.home_image}`
-          );
+          setPreviewUrl(mappedData.home_image);
         }
       } catch (err) {
         toast.error("❌ دریافت اطلاعات اولیه با خطا مواجه شد");
