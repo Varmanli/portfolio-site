@@ -3,7 +3,11 @@ import StarIcon from "@/components/ui/StarIcon";
 import LottieIcon from "@/components/ui/LottieIcon";
 import light from "@/assets/animations/light.json";
 
-export default function ProfileCard() {
+interface ProfileCardProps {
+  image: string;
+}
+
+export default function ProfileCard({ image }: ProfileCardProps) {
   return (
     <div className="w-fit border-6 shadow-2xl border-black p-10 bg-white mt-5 mx-3 lg:mx-0 lg:mt-15 relative">
       {/* گوشه ها */}
@@ -17,7 +21,7 @@ export default function ProfileCard() {
 
       <Image
         className="border-4 border-black"
-        src="/images/melika.png"
+        src={image}
         alt="عکس من"
         width={350}
         height={360}

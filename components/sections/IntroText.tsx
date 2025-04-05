@@ -1,7 +1,12 @@
 import Image from "next/image";
 import AccentButton from "@/components/ui/AccentButton";
 
-export default function IntroText() {
+interface PropsType {
+  title: string;
+  desc: string;
+}
+
+export default function IntroText({ title, desc }: PropsType) {
   return (
     <div className="relative flex flex-col gap-5 justify-center items-center lg:justify-end lg:items-end">
       <p className="lg:rotate-[335deg] text-3xl lg:absolute right-[-17%] top-[-5%] font-bold">
