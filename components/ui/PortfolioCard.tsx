@@ -3,7 +3,7 @@ import { PortfolioItem } from "@/types/pageContent";
 
 export default function PortfolioCard({ item }: { item: PortfolioItem }) {
   return (
-    <div className="group relative overflow-hidden border-5 border-black bg-white shadow-xl shadow-black transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 p-5">
+    <div className="group h-fit relative overflow-hidden border-5 border-black bg-white shadow-xl shadow-black transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 p-5">
       <Image
         src={item.thumbnail}
         alt={item.title}
