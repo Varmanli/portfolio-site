@@ -9,12 +9,12 @@ interface PropsType {
 export default function IntroText({ title, desc }: PropsType) {
   return (
     <div className="relative flex flex-col gap-5 justify-center items-center lg:justify-end lg:items-end">
-      <p className="lg:rotate-[335deg] text-3xl lg:absolute right-[-17%] top-[-5%] font-bold">
+      <textarea className="lg:rotate-[335deg] text-3xl lg:absolute right-[-17%] top-[-5%] font-bold">
         {title}
-      </p>
-      <p className="bg-white rounded-xl border-3 mx-3 lg:mx-0 p-5 lg:w-[590px] text-lg lg:text-2xl  mt-20">
+      </textarea>
+      <textarea className="bg-white rounded-xl border-3 mx-3 lg:mx-0 p-5 lg:w-[590px] text-lg lg:text-2xl  mt-20">
         {desc}
-      </p>
+      </textarea>
       <AccentButton
         text="مشاهده نمونه‌کارها"
         textSize="text-xl"

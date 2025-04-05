@@ -206,7 +206,7 @@ export default function ContentHomPageForm() {
             value={mainPageForm.home_title}
             onChange={handleInputChange}
             id="1"
-            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300 h-30"
           ></textarea>
         </div>
         <div>
