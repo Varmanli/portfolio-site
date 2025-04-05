@@ -51,16 +51,13 @@ export default function ContentHomPageForm() {
     if (!mainPageForm.home_image) return null;
 
     const formData = new FormData();
-    formData.append("file", mainPageForm.home_image);
+    formData.append("files", mainPageForm.home_image);
 
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
+        `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
           withCredentials: true, // اگه احراز هویت داری
         }
       );
