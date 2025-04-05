@@ -89,10 +89,10 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <section className="z-10 relative flex flex-col-reverse gap-15 items-center justify-center p-4  lg:flex-row lg:items-start lg:gap-20 lg:px-20 w-full max-w-[1440px] mx-auto">
+      <section className="z-10 relative flex flex-col gap-15 items-center justify-center p-4  lg:flex-row lg:items-start lg:gap-20 lg:px-20 w-full max-w-[1440px] mx-auto">
         <div className="px-4 lg:w-2/5 space-y-10 text-right">
           {/* متن معرفی */}
-          <textarea className="resize-none border-0 outline-none bg-transparent shadow-none p-0 text-xl font-semibold leading-loose h-[240px]">
+          <textarea className="resize-none border-0 outline-none bg-transparent shadow-none p-0 text-xl font-semibold leading-loose h-[370px] w-[315px] lg:h-[280px] lg:w-[460px] ">
             {homeContent.contact_desc}
           </textarea>
 
