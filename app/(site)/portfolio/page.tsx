@@ -14,16 +14,16 @@ const PortfolioPage = async () => {
       },
     }
   );
-  const data = await response.json();
+  const data: PortfolioItem[] = await response.json();
 
   // فرمت‌دهی داده‌ها به شکلی که نیاز دارید
-  const portfolios = data.map((item: PortfolioItem) => ({
+  const portfolios = data.map((item) => ({
     id: item.id,
     title: item.title,
     slug: item.slug,
     thumbnail: item.thumbnail,
     shortDesc: item.shortDesc,
-    gallery: item.gallery.map((image: PortfolioGalleryItem) => ({
+    gallery: item.gallery.map((image) => ({
       id: image.id,
       imageUrl: image.imageUrl,
     })),
