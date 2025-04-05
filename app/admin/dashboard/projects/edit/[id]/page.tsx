@@ -14,7 +14,7 @@ import { toast } from "react-hot-toast";
 import LoadingOverlay from "@/components/shared/LoadingOverlay";
 import axios from "axios";
 import { Portfolio } from "@/types/portfolio";
-
+import { api } from "@/lib/api";
 export default function EditProjectPage() {
   const router = useRouter();
   const params = useParams();
@@ -134,113 +134,63 @@ export default function EditProjectPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // اعتبارسنجی اولیه
     if (!formData.title || !formData.content) {
       toast.error("عنوان و محتوا الزامی هستند");
       return;
     }
 
     try {
-      const loadingToast = toast.loading("در حال بروزرسانی نمونه‌کار...");
+      toast.loading("در حال بروزرسانی نمونه‌کار...");
 
-      const updateData: Partial<Portfolio> = {
+      // 🟡 1. آپلود تصویر اصلی و تصاویر گالری
+      const allImagesForm = new FormData();
+
+      if (formData.mainImage) {
+        allImagesForm.append("files", formData.mainImage);
+      }
+
+      formData.gallery.forEach((file) => {
+        if (file) {
+          allImagesForm.append("files", file);
+        }
+      });
+
+      const uploadRes = await api.post("/upload/images", allImagesForm);
+      const uploadedImages = uploadRes.data;
+
+      // استخراج URL تصویر اصلی و تصاویر گالری
+      const thumbnailUrl = uploadedImages[0].filePath;
+      const galleryUrls = uploadedImages
+        .slice(1)
+        .map((img: { filePath: string }) => img.filePath);
+
+      // 🟡 2. بروزرسانی نمونه‌کار
+      const updateData = {
         title: formData.title,
+        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
+        thumbnail: thumbnailUrl,
         shortDesc: formData.caption,
         content: formData.content,
-        slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
       };
 
-      // 🟡 1. آپلود تصویر اصلی در صورت وجود
-      if (formData.mainImage) {
-        const mainForm = new FormData();
-        mainForm.append("files", formData.mainImage);
+      await api.patch(`/portfolios/${params.id}`, updateData);
 
-        try {
-          const { data } = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
-            mainForm
-          );
-
-          if (data.filePath) {
-            updateData.thumbnail = data.filePath;
-          } else {
-            console.error("No filePath returned for main image");
-          }
-        } catch (error) {
-          console.error("Error uploading main image", error);
-          toast.error("خطا در آپلود تصویر اصلی");
-        }
+      // 🟡 3. بروزرسانی گالری
+      if (galleryUrls.length > 0) {
+        await api.patch(`/gallery/${params.id}`, { images: galleryUrls });
       }
 
-      console.log("Updating Portfolio ID:", params.id);
-      console.log("Update Data:", updateData);
-
-      // 🟡 2. آپدیت نمونه‌کار
-      const { data: updatedPortfolio } = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.id}`,
-        updateData
-      );
-
-      // 🟡 3. آپلود تصاویر جدید گالری
-      const newGalleryUrls: string[] = (
-        await Promise.all(
-          formData.gallery.map(async (file) => {
-            const form = new FormData();
-            form.append("files", file);
-            try {
-              const { data } = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
-                form
-              );
-
-              if (data.filePath) {
-                return data.filePath;
-              } else {
-                console.error("No filePath returned for gallery image");
-                return null;
-              }
-            } catch (error) {
-              console.error("Error uploading gallery image", error);
-              toast.error("خطا در آپلود یکی از تصاویر گالری");
-              return null; // مقدار نامعتبر را حذف می‌کنیم
-            }
-          })
-        )
-      ).filter((url): url is string => url !== null && url !== undefined); // حذف مقادیر null/undefined
-
-      // 🟡 4. ترکیب تصاویر قدیمی و جدید
-      const existingGalleryUrls = formData.galleryPreviews
-        .filter((preview) => !preview.src.startsWith("blob:")) // حذف فایل‌های لوکال
-        .map((preview) => preview.src);
-
-      const finalGallery = [...existingGalleryUrls, ...newGalleryUrls];
-
-      console.log("Final Gallery:", finalGallery);
-
-      // 🟡 5. ارسال گالری نهایی به سرور
-      if (finalGallery.length > 0) {
-        const { data } = await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL}/gallery/${
-            updatedPortfolio.id || params.id
-          }`,
-          { images: finalGallery }
-        );
-
-        if (data.updatedImages?.count > 0) {
-          toast.success("گالری با موفقیت بروزرسانی شد ✅");
-        }
-      }
-
-      toast.dismiss(loadingToast);
-      toast.success("نمونه‌کار با موفقیت بروزرسانی شد ✅");
-      router.push("/admin/dashboard/projects");
-    } catch (error) {
       toast.dismiss();
-      console.error("Error updating portfolio:", error);
+      toast.success("نمونه‌کار با موفقیت بروزرسانی شد ✅");
+      router.push("/admin/dashboard/projects/");
+    } catch (error: unknown) {
+      toast.dismiss();
 
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message || "خطای سرور");
       } else if (error instanceof Error) {
-        toast.error(error.message);
+        toast.error(error.message || "خطایی رخ داده است");
       } else {
         toast.error("خطای ناشناخته‌ای رخ داده است");
       }
