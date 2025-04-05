@@ -2,7 +2,6 @@ import ProfileCard from "@/components/sections/ProfileCard";
 import IntroText from "@/components/sections/IntroText";
 import Decorations from "@/components/sections/Decorations";
 import { Header } from "@/components/shared/Header";
-import { headers } from "next/headers";
 
 export default async function Home() {
   const response = await fetch(
