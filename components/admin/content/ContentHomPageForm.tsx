@@ -98,7 +98,7 @@ export default function ContentHomPageForm() {
     }
 
     const formData = new FormData();
-    formData.append("files", mainPageForm.home_image);
+    formData.append("files", mainPageForm.home_image); // اطمینان از اضافه شدن تصویر به formData
 
     try {
       const res = await axios.post(
@@ -110,7 +110,6 @@ export default function ContentHomPageForm() {
       );
 
       console.log("Upload response:", res.data);
-
       return res.data[0]?.filePath || null;
     } catch (err: unknown) {
       console.error("Error uploading image:", err);
