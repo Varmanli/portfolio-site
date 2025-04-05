@@ -35,10 +35,12 @@ export default function ContentHomPageForm() {
       setPreviewUrl(url);
     }
 
-    setMainPageForm((perv) => ({
-      ...perv,
+    setMainPageForm((prev) => ({
+      ...prev,
       home_image: file,
     }));
+
+    console.log(file);
   };
 
   const handlePreviewClick = () => {
@@ -47,8 +49,52 @@ export default function ContentHomPageForm() {
     }
   };
 
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const { data }: { data: { key: string; value: string }[] } =
+          await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/home-content`, {
+            withCredentials: true,
+          });
+
+        const mappedData = data.reduce((acc, item) => {
+          acc[item.key] = item.value;
+          return acc;
+        }, {} as Record<string, string>);
+
+        setMainPageForm((prev) => ({
+          ...prev,
+          ...mappedData,
+        }));
+
+        if (mappedData.home_image) {
+          setPreviewUrl(
+            `${process.env.NEXT_PUBLIC_API_URL}${mappedData.home_image}`
+          );
+        }
+      } catch (err) {
+        toast.error("❌ دریافت اطلاعات اولیه با خطا مواجه شد");
+        console.error(err);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setMainPageForm((perv) => ({
+      ...perv,
+      [name]: value,
+    }));
+  };
   const uploadImage = async (): Promise<string | null> => {
-    if (!mainPageForm.home_image) return null;
+    if (!mainPageForm.home_image) {
+      console.error("هیچ فایلی برای آپلود وجود ندارد.");
+      return null;
+    }
 
     const formData = new FormData();
     formData.append("files", mainPageForm.home_image);
@@ -134,48 +180,6 @@ export default function ContentHomPageForm() {
       }
     }
   };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setMainPageForm((perv) => ({
-      ...perv,
-      [name]: value,
-    }));
-  };
-
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const { data }: { data: { key: string; value: string }[] } =
-          await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/home-content`, {
-            withCredentials: true,
-          });
-
-        const mappedData = data.reduce((acc, item) => {
-          acc[item.key] = item.value;
-          return acc;
-        }, {} as Record<string, string>);
-
-        setMainPageForm((prev) => ({
-          ...prev,
-          ...mappedData,
-        }));
-
-        if (mappedData.home_image) {
-          setPreviewUrl(
-            `${process.env.NEXT_PUBLIC_API_URL}${mappedData.home_image}`
-          );
-        }
-      } catch (err) {
-        toast.error("❌ دریافت اطلاعات اولیه با خطا مواجه شد");
-        console.error(err);
-      }
-    };
-
-    fetchInitialData();
-  }, []);
 
   return (
     <form onSubmit={handleSubmit}>
