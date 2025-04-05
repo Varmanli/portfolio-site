@@ -13,7 +13,6 @@ import { useRouter, useParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import LoadingOverlay from "@/components/shared/LoadingOverlay";
 import axios from "axios";
-import { Portfolio } from "@/types/portfolio";
 import { api } from "@/lib/api";
 export default function EditProjectPage() {
   const router = useRouter();
