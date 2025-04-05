@@ -201,14 +201,13 @@ export default function ContentHomPageForm() {
           >
             عنوان
           </label>
-          <input
+          <textarea
             name="home_title"
             value={mainPageForm.home_title}
             onChange={handleInputChange}
             id="1"
-            type="text"
             className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
-          />
+          ></textarea>
         </div>
         <div>
           <label
