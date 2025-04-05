@@ -130,7 +130,6 @@ export default function ContentHomPageForm() {
       return null;
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -143,12 +142,26 @@ export default function ContentHomPageForm() {
       toast.loading("در حال ذخیره محتوا...");
 
       const imageUrl = await uploadImage();
+
       const body = toKeyValueArray({
         home_title: mainPageForm.home_title,
         home_desc: mainPageForm.home_desc,
         ...(imageUrl && { home_image: imageUrl }),
       });
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/home-content`, body);
+
+      for (const item of body) {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/home-content`,
+          item,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+      }
+
       toast.dismiss();
       toast.success("✅ محتوا با موفقیت ذخیره شد");
     } catch (err: unknown) {
