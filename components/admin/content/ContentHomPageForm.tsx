@@ -58,7 +58,7 @@ export default function ContentHomPageForm() {
         `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
         formData,
         {
-          withCredentials: true, // اگه احراز هویت داری
+          withCredentials: true,
         }
       );
 
@@ -104,12 +104,9 @@ export default function ContentHomPageForm() {
 
       for (const item of payload) {
         await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/upload/image`,
+          `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
           item,
           {
-            headers: {
-              "Content-Type": "application/json",
-            },
             withCredentials: true, // اگه auth داری
           }
         );
