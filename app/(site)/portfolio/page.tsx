@@ -9,11 +9,11 @@ const PortfolioPage = async () => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/portfolios`,
     {
-      headers: {
-        "Cache-Control": "no-store",
-      },
+      cache: "no-store", 
+      credentials: "include",
     }
   );
+
   const data: PortfolioItem[] = await response.json();
 
   // فرمت‌دهی داده‌ها به شکلی که نیاز دارید
