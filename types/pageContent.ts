@@ -114,7 +114,7 @@ export interface ServiceItem {
  * @property {Date} [completionDate] - Optional project completion date
  */
 export interface PortfolioItem {
-  id: number;
+  id: string;
   title: string;
   shortDesc: string;
   thumbnail: string;
