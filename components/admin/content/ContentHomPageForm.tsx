@@ -143,19 +143,12 @@ export default function ContentHomPageForm() {
       toast.loading("در حال ذخیره محتوا...");
 
       const imageUrl = await uploadImage();
-
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/home-content`,
-        {
-          home_title: mainPageForm.home_title,
-          home_desc: mainPageForm.home_desc,
-          ...(imageUrl && { home_image: imageUrl }),
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
+      const body = toKeyValueArray({
+        home_title: mainPageForm.home_title,
+        home_desc: mainPageForm.home_desc,
+        ...(imageUrl && { home_image: imageUrl }),
+      });
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/home-content`, body);
       toast.dismiss();
       toast.success("✅ محتوا با موفقیت ذخیره شد");
     } catch (err: unknown) {
