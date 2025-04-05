@@ -2,6 +2,7 @@ import { Header } from "@/components/shared/Header";
 import StarIcon from "@/components/ui/StarIcon";
 import CallToAction from "@/components/sections/CallToAction";
 import PortfolioGrid from "@/components/sections/PortfolioGrid";
+import { PortfolioGalleryItem, PortfolioItem } from "@/types/pageContent";
 
 const PortfolioPage = async () => {
   // فچ کردن داده‌ها در سرور کامپوننت
@@ -16,13 +17,13 @@ const PortfolioPage = async () => {
   const data = await response.json();
 
   // فرمت‌دهی داده‌ها به شکلی که نیاز دارید
-  const portfolios = data.map((item: any) => ({
+  const portfolios = data.map((item: PortfolioItem) => ({
     id: item.id,
     title: item.title,
     slug: item.slug,
     thumbnail: item.thumbnail,
     shortDesc: item.shortDesc,
-    gallery: item.gallery.map((image: any) => ({
+    gallery: item.gallery.map((image: PortfolioGalleryItem) => ({
       id: image.id,
       imageUrl: image.imageUrl,
     })),
