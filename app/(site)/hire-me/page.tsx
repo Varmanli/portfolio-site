@@ -43,7 +43,7 @@ export default function ContactPage() {
 
         setHomeContent(content);
         setLoading(false);
-      } catch (error: any) {
+      } catch {
         setError("Error fetching data");
         setLoading(false);
       }
