@@ -7,13 +7,50 @@ import LottieIcon from "@/components/ui/LottieIcon";
 import { IoMdMail } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { ContactRow } from "@/components/shared/ContactRow";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [homeContent, setHomeContent] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHomeContent = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/home-content`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        const data = await response.json();
+        const content = data.reduce(
+          (
+            acc: Record<string, string>,
+            item: { key: string; value: string }
+          ) => {
+            acc[item.key] = item.value;
+            return acc;
+          },
+          {}
+        );
+
+        setHomeContent(content);
+        setLoading(false);
+      } catch (error: any) {
+        setError("Error fetching data");
+        setLoading(false);
+      }
+    };
+
+    fetchHomeContent();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,20 +76,25 @@ export default function ContactPage() {
       console.error(error);
     }
   };
+  if (loading) {
+    return (
+      <p>
+        <LoadingSpinner />
+      </p>
+    );
+  }
+  if (error) {
+    return <p>{error}</p>;
+  }
   return (
     <>
       <Header />
       <section className="z-10 relative flex flex-col-reverse gap-15 items-center justify-center p-4  lg:flex-row lg:items-start lg:gap-20 lg:px-20 w-full max-w-[1440px] mx-auto">
         <div className="px-4 lg:w-2/5 space-y-10 text-right">
           {/* متن معرفی */}
-          <p className="text-xl font-semibold leading-loose">
-            اگر پروژه‌ای دارید که نیاز به دقت، خلاقیت و اجرای حرفه‌ای داره،
-            خوشحال می‌شم بخشی از مسیر شما باشم.
-            <br />
-            <br />
-            مهم نیست پروژه‌تون کوچیکه یا بزرگ؛ می‌تونید از طریق فرم رو به رو یا
-            اطلاعات تماسی که در سایت قرار گرفته، همکاری رو با من آغاز کنید.
-          </p>
+          <textarea className="resize-none border-0 outline-none bg-transparent shadow-none p-0 text-xl font-semibold leading-loose h-[240px]">
+            {homeContent.contact_desc}
+          </textarea>
 
           {/* اطلاعات تماس */}
           <div className="space-y-6">
@@ -68,13 +110,13 @@ export default function ContactPage() {
                   className="text-[#F196E5] text-3xl hover:scale-110 transition-transform"
                 />,
               ]}
-              text="+989102408010"
+              text={homeContent.contact_phone}
             />
             <ContactRow
               icons={[
                 <IoMdMail key="email" className="text-[#F196E5] text-3xl" />,
               ]}
-              text="m.shemirani33@gmail.com"
+              text={homeContent.contact_email}
             />
             <ContactRow
               icons={[
@@ -83,7 +125,7 @@ export default function ContactPage() {
                   className="text-[#F196E5] text-3xl"
                 />,
               ]}
-              text="تهران"
+              text={homeContent.contact_city}
             />
           </div>
         </div>
