@@ -142,29 +142,46 @@ export default function EditProjectPage() {
     try {
       toast.loading("در حال بروزرسانی نمونه‌کار...");
 
-      // 🟡 1. آپلود تصویر اصلی و تصاویر گالری
-      const allImagesForm = new FormData();
+      let thumbnailUrl = formData.mainPreview; // فرض بر این است که mainPreview حاوی URL تصویر اصلی موجود است
 
-      if (formData.mainImage) {
-        allImagesForm.append("files", formData.mainImage);
+      // 🟡 1. آپلود تصویر اصلی در صورت جدید بودن
+      if (formData.mainPreview.startsWith("blob:")) {
+        const mainImageForm = new FormData();
+        mainImageForm.append("files", formData.mainImage as Blob);
+
+        const mainUploadRes = await api.post("/upload/images", mainImageForm);
+        const mainUploadedImage = mainUploadRes.data[0]; // فرض بر این است که سرور یک آرایه برمی‌گرداند
+
+        if (mainUploadedImage && mainUploadedImage.filePath) {
+          thumbnailUrl = mainUploadedImage.filePath;
+        }
       }
 
-      formData.gallery.forEach((file) => {
-        if (file) {
-          allImagesForm.append("files", file);
-        }
-      });
+      // 🟡 2. آپلود تصاویر جدید گالری
+      const newGalleryFiles = formData.galleryPreviews
+        .filter((preview) => preview.src.startsWith("blob:"))
+        .map((preview, index) => formData.gallery[index]);
 
-      const uploadRes = await api.post("/upload/images", allImagesForm);
-      const uploadedImages = uploadRes.data;
+      let galleryUrls = formData.galleryPreviews
+        .filter((preview) => !preview.src.startsWith("blob:"))
+        .map((preview) => preview.src);
 
-      // استخراج URL تصویر اصلی و تصاویر گالری
-      const thumbnailUrl = uploadedImages[0].filePath;
-      const galleryUrls = uploadedImages
-        .slice(1)
-        .map((img: { filePath: string }) => img.filePath);
+      if (newGalleryFiles.length > 0) {
+        const galleryForm = new FormData();
+        newGalleryFiles.forEach((file) => {
+          galleryForm.append("files", file as Blob);
+        });
 
-      // 🟡 2. بروزرسانی نمونه‌کار
+        const galleryUploadRes = await api.post("/upload/images", galleryForm);
+        const galleryUploadedImages = galleryUploadRes.data;
+
+        const newGalleryUrls = galleryUploadedImages.map(
+          (img: { filePath: string }) => img.filePath
+        );
+        galleryUrls = [...galleryUrls, ...newGalleryUrls];
+      }
+
+      // 🟡 3. بروزرسانی نمونه‌کار
       const updateData = {
         title: formData.title,
         slug: formData.title.replace(/\s+/g, "-").toLowerCase(),
@@ -175,7 +192,7 @@ export default function EditProjectPage() {
 
       await api.patch(`/portfolios/${params.id}`, updateData);
 
-      // 🟡 3. بروزرسانی گالری
+      // 🟡 4. بروزرسانی گالری
       if (galleryUrls.length > 0) {
         await api.patch(`/gallery/${params.id}`, { images: galleryUrls });
       }
