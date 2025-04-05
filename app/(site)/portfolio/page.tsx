@@ -2,7 +2,7 @@ import { Header } from "@/components/shared/Header";
 import StarIcon from "@/components/ui/StarIcon";
 import CallToAction from "@/components/sections/CallToAction";
 import PortfolioGrid from "@/components/sections/PortfolioGrid";
-import { PortfolioGalleryItem, PortfolioItem } from "@/types/pageContent";
+import { PortfolioItem } from "@/types/pageContent";
 
 const PortfolioPage = async () => {
   // فچ کردن داده‌ها در سرور کامپوننت
