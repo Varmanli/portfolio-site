@@ -90,6 +90,7 @@ export default function ContentHomPageForm() {
       [name]: value,
     }));
   };
+
   const uploadImage = async (): Promise<string | null> => {
     if (!mainPageForm.home_image) {
       console.error("هیچ فایلی برای آپلود وجود ندارد.");
@@ -110,6 +111,7 @@ export default function ContentHomPageForm() {
 
       return res.data.filePath;
     } catch (err: unknown) {
+      console.error("Error uploading image:", err);
       if (typeof err === "object" && err !== null && "response" in err) {
         const error = err as {
           response?: { data?: { message?: string } };
@@ -142,21 +144,17 @@ export default function ContentHomPageForm() {
 
       const imageUrl = await uploadImage();
 
-      const payload = toKeyValueArray({
-        home_title: mainPageForm.home_title,
-        home_desc: mainPageForm.home_desc,
-        ...(imageUrl ? { home_image: imageUrl } : {}),
-      });
-
-      for (const item of payload) {
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/upload/images`,
-          item,
-          {
-            withCredentials: true, // اگه auth داری
-          }
-        );
-      }
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/home-content`,
+        {
+          home_title: mainPageForm.home_title,
+          home_desc: mainPageForm.home_desc,
+          ...(imageUrl && { home_image: imageUrl }),
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       toast.dismiss();
       toast.success("✅ محتوا با موفقیت ذخیره شد");
