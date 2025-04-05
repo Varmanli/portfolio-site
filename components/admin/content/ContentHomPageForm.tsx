@@ -109,7 +109,9 @@ export default function ContentHomPageForm() {
         }
       );
 
-      return res.data.filePath;
+      console.log("Upload response:", res.data);
+
+      return res.data[0]?.filePath || null;
     } catch (err: unknown) {
       console.error("Error uploading image:", err);
       if (typeof err === "object" && err !== null && "response" in err) {
@@ -130,6 +132,7 @@ export default function ContentHomPageForm() {
       return null;
     }
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
