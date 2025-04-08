@@ -1,6 +1,6 @@
 import { Header } from "@/components/shared/Header";
-import StarIcon from "@/components/ui/StarIcon";
 import Image from "next/image";
+import Link from "next/link";
 
 type Service = {
   id: number;
@@ -38,21 +38,18 @@ export default async function ServicesPage() {
               className="flex justify-between items-center gap-4 p-5 border-4 border-black bg-white shadow-xl shadow-black/60"
             >
               <span className="lg:text-2xl font-semibold">{service.title}</span>
-              <Image
-                src="/Service-icon.svg"
-                alt="icon"
-                width={38}
-                height={38}
-              />
+              <Link href="hire-me">
+                <Image
+                  src="/Service-icon.svg"
+                  alt="icon"
+                  width={38}
+                  height={38}
+                />
+              </Link>
             </div>
           ))}
         </div>
       </section>
-      <StarIcon
-        className="absolute bottom-[-80%] left-0 lg:left-0 lg:bottom-[-40%]"
-        size={100}
-        color="#F3ABCB"
-      />
     </>
   );
 }

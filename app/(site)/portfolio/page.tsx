@@ -1,5 +1,4 @@
 import { Header } from "@/components/shared/Header";
-import StarIcon from "@/components/ui/StarIcon";
 import CallToAction from "@/components/sections/CallToAction";
 import PortfolioGrid from "@/components/sections/PortfolioGrid";
 import { PortfolioItem } from "@/types/pageContent";
@@ -9,7 +8,7 @@ const PortfolioPage = async () => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/portfolios`,
     {
-      cache: "no-store", 
+      cache: "no-store",
       credentials: "include",
     }
   );
@@ -36,12 +35,6 @@ const PortfolioPage = async () => {
         <PortfolioGrid items={portfolios} />
         <CallToAction />
       </section>
-      {/* آیکون دکوری ستاره */}
-      <StarIcon
-        className="absolute bottom-[-40px] right-[10px] lg:bottom-[-60px] lg:right-[90px] z-0"
-        size={100}
-        color="#F3ABCB"
-      />
     </>
   );
 };

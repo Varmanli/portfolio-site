@@ -26,7 +26,8 @@
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
-    "yet-another-react-lightbox": "^3.21.8"
+    "swiper": "^11.2.6",
+    "yet-another-react-lightbox": "^3.22.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

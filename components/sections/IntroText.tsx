@@ -1,5 +1,6 @@
 import Image from "next/image";
 import AccentButton from "@/components/ui/AccentButton";
+import Link from "next/link";
 
 interface PropsType {
   title: string;
@@ -15,11 +16,13 @@ export default function IntroText({ title, desc }: PropsType) {
       <textarea className="resize-none  outline-none shadow-none bg-white rounded-xl border-3 mx-3 lg:mx-0 p-5 lg:w-[590px] text-lg lg:text-2xl h-[270px] w-[330px] lg:h-[240px] lg:mt-20">
         {desc}
       </textarea>
-      <AccentButton
-        text="مشاهده نمونه‌کارها"
-        textSize="text-xl"
-        margin="lg:ml-5 mb-10 lg:mb-0"
-      />
+      <Link href="/portfolio">
+        <AccentButton
+          text="مشاهده نمونه‌کارها"
+          textSize="text-xl"
+          margin="lg:ml-5 mb-10 lg:mb-0"
+        />
+      </Link>
       <Image
         src="/button-icon.svg"
         width={40}
