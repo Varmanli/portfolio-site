@@ -104,17 +104,21 @@ export default function ProjectDetailPage() {
           >
             {portfolio.gallery.map((item, index) => (
               <SwiperSlide key={index}>
-                <div className="relative group">
-                  <div className="absolute w-5 h-5 bg-white border-2 border-black top-[0] right-[0]"></div>
-                  <div className="absolute w-5 h-5 bg-white border-2 border-black top-[0] left-[0]"></div>
-                  <div className="absolute w-5 h-5 bg-white border-2 border-black bottom-[0] left-[0]"></div>
-                  <div className="absolute w-5 h-5 bg-white border-2 border-black bottom-[0] right-[0]"></div>
+                <div className="relative group inline-block">
+                  {/* گوشه‌ها داخل این container دقیق قرار می‌گیرن */}
+                  <div className="absolute w-5 h-5 bg-white border-2 border-black top-0 right-0 z-10"></div>
+                  <div className="absolute w-5 h-5 bg-white border-2 border-black top-0 left-0 z-10"></div>
+                  <div className="absolute w-5 h-5 bg-white border-2 border-black bottom-0 left-0 z-10"></div>
+                  <div className="absolute w-5 h-5 bg-white border-2 border-black bottom-0 right-0 z-10"></div>
+
+                  {/* خود تصویر */}
                   <Image
                     src={item.imageUrl}
                     alt={`portfolio-${index}`}
-                    width={600}
-                    height={700}
-                    className="border-4 border-black shadow-xl shadow-black cursor-pointer"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    className="h-auto w-auto max-w-full border-4 border-black shadow-xl shadow-black cursor-pointer"
                     onClick={() => {
                       setLightboxIndex(index);
                       setLightboxOpen(true);
