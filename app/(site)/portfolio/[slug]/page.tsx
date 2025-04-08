@@ -77,7 +77,7 @@ export default function ProjectDetailPage() {
     <>
       <Header />
       <section className="px-4 py-10 max-w-[1440px] mx-auto relative z-10">
-        <div className="flex justify-center mx-auto items-center gap-5 mb-10 w-[700px]">
+        <div className="flex justify-center mx-auto items-center gap-5 mb-10 w-full sm:w-[700px]">
           <button
             ref={nextRef}
             className="bg-accent rounded-full border-4 cursor-pointer"
@@ -100,12 +100,11 @@ export default function ProjectDetailPage() {
                 swiper.params.navigation.nextEl = nextRef.current;
               }
             }}
-            className="w-full"
+            className="w-full sm:w-[700px]"
           >
             {portfolio.gallery.map((item, index) => (
               <SwiperSlide key={index}>
                 <div className="relative group inline-block">
-                  {/* خود تصویر */}
                   <Image
                     src={item.imageUrl}
                     alt={`portfolio-${index}`}
@@ -131,7 +130,7 @@ export default function ProjectDetailPage() {
           </button>
         </div>
 
-        <div className="flex flex-col gap-5 bg-white border-4 rounded-md p-10 text-xl">
+        <div className="flex flex-col gap-5 bg-white border-4 rounded-md p-5 sm:p-10 text-xl">
           <div className="flex items-center gap-3">
             <svg
               width="38"
@@ -145,7 +144,9 @@ export default function ProjectDetailPage() {
                 fill="#0C0C0C"
               />
             </svg>
-            <h1 className="text-4xl font-bold ">{portfolio.title}</h1>
+            <h1 className="text-2xl sm:text-4xl font-bold">
+              {portfolio.title}
+            </h1>
           </div>
           <div className="flex items-center gap-3">
             <svg
@@ -160,7 +161,10 @@ export default function ProjectDetailPage() {
                 fill="#0C0C0C"
               />
             </svg>
-            <div dangerouslySetInnerHTML={{ __html: portfolio.content }} />
+            <div
+              dangerouslySetInnerHTML={{ __html: portfolio.content }}
+              className="text-sm sm:text-xl"
+            />
           </div>
         </div>
 
