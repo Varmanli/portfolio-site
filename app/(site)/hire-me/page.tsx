@@ -142,7 +142,7 @@ export default function ContactPage() {
             <input
               type="text"
               className="border-2 border-[#656ED3] bg-white rounded-md p-2"
-              placeholder="مثلاً ملیکا"
+              placeholder="مثلاً نیکی"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
