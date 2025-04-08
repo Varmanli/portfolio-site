@@ -105,12 +105,6 @@ export default function ProjectDetailPage() {
             {portfolio.gallery.map((item, index) => (
               <SwiperSlide key={index}>
                 <div className="relative group inline-block">
-                  {/* گوشه‌ها داخل این container دقیق قرار می‌گیرن */}
-                  <div className="absolute w-5 h-5 bg-white border-2 border-black top-0 right-0 z-10"></div>
-                  <div className="absolute w-5 h-5 bg-white border-2 border-black top-0 left-0 z-10"></div>
-                  <div className="absolute w-5 h-5 bg-white border-2 border-black bottom-0 left-0 z-10"></div>
-                  <div className="absolute w-5 h-5 bg-white border-2 border-black bottom-0 right-0 z-10"></div>
-
                   {/* خود تصویر */}
                   <Image
                     src={item.imageUrl}

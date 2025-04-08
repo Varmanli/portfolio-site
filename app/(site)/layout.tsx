@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { PageMetadata } from "@/types/pageContent";
 import { Toaster } from "react-hot-toast";
+import DisableRightClick from "@/components/DisableRightClick";
 
 export const metadata: Metadata & PageMetadata = {
   title: "Melika shemirani",
@@ -20,6 +21,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Toaster position="top-center" reverseOrder={false} />
+        <DisableRightClick />
         <div className="bg-background min-h-screen w-full pb-10">
           {children}
         </div>

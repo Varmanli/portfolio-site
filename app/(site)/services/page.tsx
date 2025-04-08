@@ -1,7 +1,8 @@
 import { Header } from "@/components/shared/Header";
+import LottieIcon from "@/components/ui/LottieIcon";
 import Image from "next/image";
 import Link from "next/link";
-
+import animation from "@/assets/animations/services.json";
 type Service = {
   id: number;
   title: string;
@@ -12,7 +13,7 @@ export default async function ServicesPage() {
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services`, {
-      cache: "no-store", // باعث می‌شود همیشه درخواست جدید ارسال شود
+      cache: "no-store",
       credentials: "include",
     });
 
@@ -26,10 +27,13 @@ export default async function ServicesPage() {
   return (
     <>
       <Header />
-      <section className="px-6 py-10 max-w-[1440px] mx-auto relative z-10">
-        <p className="text-lg lg:text-4xl font-bold mb-8 text-center">
-          آنچه می‌توانم برای شما انجام دهم
-        </p>
+      <section className="px-6 pb-10 max-w-[1440px] mx-auto relative z-10">
+        <div className="flex justify-center items-center mt-3 lg:mt-0 mb-6">
+          <p className="text-lg lg:text-4xl font-bold text-center">
+            آنچه می‌توانم برای شما انجام دهم
+          </p>
+          <LottieIcon src={animation} size={120} sizeMobile={60} />
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 lg:gap-15 lg:mx-20">
           {services.map((service) => (

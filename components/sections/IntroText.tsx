@@ -1,7 +1,7 @@
 import Image from "next/image";
 import AccentButton from "@/components/ui/AccentButton";
 import Link from "next/link";
-
+import smile from "@/assets/smile.svg";
 interface PropsType {
   title: string;
   desc: string;
@@ -21,8 +21,17 @@ export default function IntroText({ title, desc }: PropsType) {
           text="مشاهده نمونه‌کارها"
           textSize="text-xl"
           margin="lg:ml-5 mb-10 lg:mb-0"
+          className="cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
         />
       </Link>
+
+      <Image
+        src={smile}
+        alt="icon"
+        width={30}
+        height={30}
+        className="absolute top-2 right-21 lg:top-[-9%] lg:right-6 lg:-rotate-20"
+      />
       <Image
         src="/button-icon.svg"
         width={40}

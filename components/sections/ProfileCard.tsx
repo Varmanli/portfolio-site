@@ -10,11 +10,6 @@ interface ProfileCardProps {
 export default function ProfileCard({ image }: ProfileCardProps) {
   return (
     <div className="w-fit border-6 shadow-2xl border-black p-10 bg-white mt-5 mx-3 lg:mx-0 lg:mt-15 relative">
-      {/* گوشه ها */}
-      <div className="absolute w-6.5 h-6.5 bg-white border-4 border-black top-[-4%] right-[-5%]"></div>
-      <div className="absolute w-6.5 h-6.5 bg-white border-4 border-black top-[-4%] left-[-5%]"></div>
-      <div className="absolute w-6.5 h-6.5 bg-white border-4 border-black bottom-[-4%] left-[-5%]"></div>
-      <div className="absolute w-6.5 h-6.5 bg-white border-4 border-black bottom-[-4%] right-[-5%]"></div>
       {/* دایره ها */}
       <div className="absolute bg-black w-4 h-4 rounded-full top-3 left-[35%]"></div>
       <div className="absolute bg-black w-4 h-4 rounded-full top-3 right-[35%]"></div>
