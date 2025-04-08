@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { PageMetadata } from "@/types/pageContent";
 
 export const metadata: Metadata = {
   title: "عنوان سایت",
