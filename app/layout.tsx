@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { PageMetadata } from "@/types/pageContent";
 
-export const metadata: Metadata & PageMetadata = {
-  title: "Melika shemirani",
-  description: "طراحی‌شده با Next.js و Tailwind CSS",
+export const metadata: Metadata = {
+  title: "عنوان سایت",
+  description: "توضیح کوتاه سایت",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 export default function RootLayout({
   children,

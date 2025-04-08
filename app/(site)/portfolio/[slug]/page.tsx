@@ -112,7 +112,7 @@ export default function ProjectDetailPage() {
                     width={0}
                     height={0}
                     sizes="100vw"
-                    className="h-auto w-auto max-w-full border-4 border-black shadow-xl shadow-black cursor-pointer"
+                    className="h-auto w-auto max-w-full border-4 border-black shadow-xl cursor-pointer"
                     onClick={() => {
                       setLightboxIndex(index);
                       setLightboxOpen(true);
