@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { PageMetadata } from "@/types/pageContent";
 import { Toaster } from "react-hot-toast";
-import DisableRightClick from "@/components/DisableRightClick";
+// import DisableRightClick from "@/components/DisableRightClick";
 
 export const metadata: Metadata & PageMetadata = {
   title: "Melika shemirani",
