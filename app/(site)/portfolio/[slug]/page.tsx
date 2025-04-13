@@ -19,11 +19,11 @@ interface PortfolioData {
   gallery: GalleryImage[];
 }
 
-interface PageProps {
+export default async function ProjectDetailPage({
+  params,
+}: {
   params: { slug: string };
-}
-
-export default async function ProjectDetailPage({ params }: PageProps) {
+}) {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.slug}`,
