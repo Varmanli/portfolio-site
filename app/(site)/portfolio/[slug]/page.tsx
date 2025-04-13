@@ -19,14 +19,16 @@ interface PortfolioData {
   gallery: GalleryImage[];
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function ProjectDetailPage({ params }: Props) {
+  const { slug } = await params;
+
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.slug}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${slug}`,
       { cache: "no-store" }
     );
 
