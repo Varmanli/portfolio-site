@@ -1,5 +1,3 @@
-
-
 import { Header } from "@/components/shared/Header";
 import PortfolioContent from "@/components/ui/PortfolioContent";
 import { notFound } from "next/navigation";
@@ -21,26 +19,29 @@ interface PortfolioData {
   gallery: GalleryImage[];
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: {
+interface PageProps {
   params: { slug: string };
-}) {
-  const { slug } = params;
+}
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${slug}`,
-    { cache: "no-store" }
-  );
+export default async function ProjectDetailPage({ params }: PageProps) {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/portfolios/${params.slug}`,
+      { cache: "no-store" }
+    );
 
-  if (!res.ok) return notFound();
+    if (!res.ok) return notFound();
 
-  const data: PortfolioData = await res.json();
+    const portfolio: PortfolioData = await res.json();
 
-  return (
-    <>
-      <Header />
-      <PortfolioContent portfolio={data} />
-    </>
-  );
+    return (
+      <>
+        <Header />
+        <PortfolioContent portfolio={portfolio} />
+      </>
+    );
+  } catch (error) {
+    console.error("❌ Error loading portfolio:", error);
+    return notFound();
+  }
 }
