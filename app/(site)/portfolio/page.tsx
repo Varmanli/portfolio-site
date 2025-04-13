@@ -3,8 +3,7 @@ import CallToAction from "@/components/sections/CallToAction";
 import PortfolioGrid from "@/components/sections/PortfolioGrid";
 import { PortfolioItem } from "@/types/pageContent";
 
-const PortfolioPage = async () => {
-  // فچ کردن داده‌ها در سرور کامپوننت
+export default async function PortfolioPage() {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/portfolios`,
     {
@@ -13,9 +12,14 @@ const PortfolioPage = async () => {
     }
   );
 
+  if (!response.ok) {
+    // اختیاری: لاگ خطا یا ریدایرکت یا نمایش fallback
+    console.error("Failed to fetch portfolios:", response.status);
+    throw new Error("Failed to load portfolios"); // یا return fallback
+  }
+
   const data: PortfolioItem[] = await response.json();
 
-  // فرمت‌دهی داده‌ها به شکلی که نیاز دارید
   const portfolios = data.map((item) => ({
     id: item.id,
     title: item.title,
@@ -38,5 +42,3 @@ const PortfolioPage = async () => {
     </>
   );
 };
-
-export default PortfolioPage;

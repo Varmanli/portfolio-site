@@ -21,7 +21,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Toaster position="top-center" reverseOrder={false} />
-        <DisableRightClick />
+        {/* <DisableRightClick /> */}
         <div className="bg-background min-h-screen w-full pb-10">
           {children}
         </div>
