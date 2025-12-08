@@ -3,20 +3,29 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-interface mainPageFormType {
-  home_image: File | null;
+type Primitive = string | number | boolean | null | undefined;
+
+interface MainPageFormState {
+  home_image_file: File | null; // فقط برای فایل جدید
+  home_image_url: string;       // آدرس ذخیره شده در سرور
   home_title: string;
   home_desc: string;
 }
-type Primitive = string | number | boolean | null | undefined;
 
-export default function ContentHomPageForm() {
+type HomeContentItem = {
+  key: string;
+  value: string;
+};
+
+export default function ContentHomePageForm() {
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
-  const [mainPageForm, setMainPageForm] = useState<mainPageFormType>({
-    home_image: null,
+  const [mainPageForm, setMainPageForm] = useState<MainPageFormState>({
+    home_image_file: null,
+    home_image_url: "",
     home_title: "",
     home_desc: "",
   });
+
   const toKeyValueArray = (
     data: Record<string, Primitive>,
     skipKeys: string[] = []
@@ -25,11 +34,13 @@ export default function ContentHomPageForm() {
       .filter(([key]) => !skipKeys.includes(key))
       .map(([key, value]) => ({
         key,
-        value: String(value),
+        value: String(value ?? ""),
       }));
   };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
+
     if (file) {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
@@ -37,10 +48,8 @@ export default function ContentHomPageForm() {
 
     setMainPageForm((prev) => ({
       ...prev,
-      home_image: file,
+      home_image_file: file,
     }));
-
-    console.log(file);
   };
 
   const handlePreviewClick = () => {
@@ -52,19 +61,27 @@ export default function ContentHomPageForm() {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const { data }: { data: { key: string; value: string }[] } =
-          await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/home-content`, {
+        const { data } = await axios.get<HomeContentItem[]>(
+          `${process.env.NEXT_PUBLIC_API_URL}/home-content`,
+          {
             withCredentials: true,
-          });
+          }
+        );
 
-        const mappedData = data.reduce((acc, item) => {
-          acc[item.key] = item.value;
-          return acc;
-        }, {} as Record<string, string>);
+        const mappedData = data.reduce(
+          (acc, item) => {
+            acc[item.key] = item.value;
+            return acc;
+          },
+          {} as Record<string, string>
+        );
 
         setMainPageForm((prev) => ({
           ...prev,
-          ...mappedData,
+          home_title: mappedData.home_title ?? prev.home_title,
+          home_desc: mappedData.home_desc ?? prev.home_desc,
+          home_image_url: mappedData.home_image ?? prev.home_image_url,
+          home_image_file: null,
         }));
 
         if (mappedData.home_image) {
@@ -83,20 +100,23 @@ export default function ContentHomPageForm() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setMainPageForm((perv) => ({
-      ...perv,
-      [name]: value,
-    }));
+
+    if (name === "home_title" || name === "home_desc") {
+      setMainPageForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const uploadImage = async (): Promise<string | null> => {
-    if (!mainPageForm.home_image) {
-      console.error("هیچ فایلی برای آپلود وجود ندارد.");
-      return null;
+    // اگر فایل جدید انتخاب نشده، آدرس قبلی را برگردان
+    if (!mainPageForm.home_image_file) {
+      return mainPageForm.home_image_url || null;
     }
 
     const formData = new FormData();
-    formData.append("files", mainPageForm.home_image); // اطمینان از اضافه شدن تصویر به formData
+    formData.append("files", mainPageForm.home_image_file);
 
     try {
       const res = await axios.post(
@@ -107,25 +127,31 @@ export default function ContentHomPageForm() {
         }
       );
 
-      console.log("Upload response:", res.data);
-      return res.data[0]?.filePath || null;
-    } catch (err: unknown) {
+      const uploadedUrl: string | undefined = res.data?.[0]?.filePath;
+      if (!uploadedUrl) {
+        toast.error("❌ آدرس تصویر آپلود شده دریافت نشد");
+        return null;
+      }
+
+      return uploadedUrl;
+    } catch (err) {
       console.error("Error uploading image:", err);
-      if (typeof err === "object" && err !== null && "response" in err) {
-        const error = err as {
-          response?: { data?: { message?: string } };
-          message?: string;
-        };
-        toast.error(
-          `❌ خطا در آپلود عکس: ${
-            error.response?.data?.message || error.message || "خطای ناشناخته"
-          }`
-        );
+
+      if (axios.isAxiosError(err)) {
+        const message =
+          err.response?.data &&
+          typeof err.response.data === "object" &&
+          "message" in err.response.data
+            ? (err.response.data as { message?: string }).message
+            : err.message;
+
+        toast.error(`❌ خطا در آپلود عکس: ${message || "خطای ناشناخته"}`);
       } else if (err instanceof Error) {
         toast.error(`❌ ${err.message}`);
       } else {
         toast.error("❌ خطای ناشناخته");
       }
+
       return null;
     }
   };
@@ -138,8 +164,10 @@ export default function ContentHomPageForm() {
       return;
     }
 
+    let loadingToastId: string | undefined;
+
     try {
-      toast.loading("در حال ذخیره محتوا...");
+      loadingToastId = toast.loading("در حال ذخیره محتوا...");
 
       const imageUrl = await uploadImage();
 
@@ -162,21 +190,29 @@ export default function ContentHomPageForm() {
         );
       }
 
-      toast.dismiss();
+      if (loadingToastId) toast.dismiss(loadingToastId);
       toast.success("✅ محتوا با موفقیت ذخیره شد");
-    } catch (err: unknown) {
-      toast.dismiss();
 
-      if (typeof err === "object" && err !== null && "response" in err) {
-        const error = err as {
-          response?: { data?: { message?: string } };
-          message?: string;
-        };
-        toast.error(
-          `❌ ${
-            error.response?.data?.message || error.message || "خطایی رخ داد"
-          }`
-        );
+      // اگر تصویر جدید آپلود شد، استیت URL را هم به‌روزرسانی کن
+      if (imageUrl) {
+        setMainPageForm((prev) => ({
+          ...prev,
+          home_image_url: imageUrl,
+          home_image_file: null,
+        }));
+      }
+    } catch (err) {
+      if (loadingToastId) toast.dismiss(loadingToastId);
+
+      if (axios.isAxiosError(err)) {
+        const message =
+          err.response?.data &&
+          typeof err.response.data === "object" &&
+          "message" in err.response.data
+            ? (err.response.data as { message?: string }).message
+            : err.message;
+
+        toast.error(`❌ ${message || "خطایی رخ داد"}`);
       } else if (err instanceof Error) {
         toast.error(`❌ ${err.message}`);
       } else {
@@ -187,46 +223,49 @@ export default function ContentHomPageForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-8 ">
+      <div className="flex flex-col gap-8">
         <ImageUploader
           label="تصویر اصلی"
           preview={previewUrl}
           onImageChange={handleImageChange}
           onPreviewClick={handlePreviewClick}
         />
+
         <div>
           <label
-            htmlFor="1"
-            className="block text-sm font-semibold text-gray-700 mb-1"
+            htmlFor="home_title"
+            className="mb-1 block text-sm font-semibold text-gray-700"
           >
             عنوان
           </label>
           <textarea
             name="home_title"
+            id="home_title"
             value={mainPageForm.home_title}
             onChange={handleInputChange}
-            id="1"
-            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300 h-30"
-          ></textarea>
+            className="h-30 w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
+          />
         </div>
+
         <div>
           <label
-            htmlFor="2"
-            className="block text-sm font-semibold text-gray-700 mb-1"
+            htmlFor="home_desc"
+            className="mb-1 block text-sm font-semibold text-gray-700"
           >
             معرفی
           </label>
           <textarea
+            name="home_desc"
+            id="home_desc"
             value={mainPageForm.home_desc}
             onChange={handleInputChange}
-            name="home_desc"
-            id="2"
-            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300 h-40"
-          ></textarea>
+            className="h-40 w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
+          />
         </div>
+
         <button
           type="submit"
-          className="w-30 ms-auto bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md transition "
+          className="ms-auto w-30 rounded-md bg-yellow-500 px-4 py-2 font-medium text-white transition hover:bg-yellow-600"
         >
           ثبت تغییرات
         </button>
