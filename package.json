@@ -21,7 +21,7 @@
     "axios": "^1.8.4",
     "lottie-react": "^2.4.1",
     "moment-jalaali": "^0.10.4",
-    "next": "^16.0.7",
+    "next": "16.0.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
