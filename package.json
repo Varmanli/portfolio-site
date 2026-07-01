@@ -6,9 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:seed": "tsx --env-file=.env.local lib/db/seed.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1077.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
@@ -19,9 +24,16 @@
     "@tiptap/react": "^2.11.6",
     "@tiptap/starter-kit": "^2.11.6",
     "axios": "^1.8.4",
+    "bcryptjs": "^3.0.3",
+    "drizzle-orm": "^0.45.2",
+    "embla-carousel-react": "^8.6.0",
+    "isomorphic-dompurify": "^3.18.0",
+    "jose": "^6.2.3",
     "lottie-react": "^2.4.1",
+    "lucide-react": "^1.22.0",
     "moment-jalaali": "^0.10.4",
     "next": "^16.0.7",
+    "postgres": "^3.4.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
@@ -36,9 +48,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
     "tailwindcss": "^4",
+    "tsx": "^4.22.4",
     "typescript": "^5"
   }
 }

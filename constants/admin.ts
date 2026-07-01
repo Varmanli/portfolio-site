@@ -1,4 +1,4 @@
-import { Message, ContentSection, SiteSettings } from "@/types/admin";
+import { Message, ContentSection } from "@/types/admin";
 
 /**
  * Mock data for messages
@@ -24,21 +24,6 @@ export const MOCK_MESSAGES: Message[] = [
     createdAt: "2024-03-28T15:30:00Z",
   },
 ];
-
-/**
- * Mock data for site settings
- * This will be replaced with actual API data in production
- */
-export const MOCK_SETTINGS: SiteSettings = {
-  siteTitle: "ملیکا شمیرانی",
-  siteDescription: "پورتفولیو شخصی",
-  contactEmail: "melika@example.com",
-  socialLinks: {
-    instagram: "https://instagram.com/example",
-    linkedin: "https://linkedin.com/in/example",
-    github: "https://github.com/example",
-  },
-};
 
 /**
  * Mock data for content sections

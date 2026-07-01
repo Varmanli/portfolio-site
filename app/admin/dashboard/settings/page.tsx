@@ -1,68 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { MdSettings } from "react-icons/md";
-import { SiteSettings } from "@/types/admin";
-import { MOCK_SETTINGS } from "@/constants/admin";
 import SettingsForm from "@/components/admin/settings/SettingsForm";
 
-/**
- * Settings Page
- *
- * A page for managing site settings including social links and general configurations.
- *
- * @returns {JSX.Element} The settings page component
- */
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<SiteSettings>(MOCK_SETTINGS);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        // TODO: Replace with actual API call
-        // const data = await settingsApi.get();
-        // setSettings(data);
-      } catch (error) {
-        console.error("Error fetching settings:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSettings();
-  }, []);
-
-  const handleSaveSettings = async (newSettings: SiteSettings) => {
-    try {
-      // TODO: Replace with actual API call
-      // await settingsApi.update(newSettings);
-      setSettings(newSettings);
-      alert("تنظیمات با موفقیت ذخیره شد");
-    } catch (error) {
-      console.error("Error saving settings:", error);
-      alert("خطا در ذخیره تنظیمات");
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex items-center gap-4 mb-8">
-        <div className="p-2 bg-yellow-100 rounded-lg">
-          <MdSettings size={24} className="text-yellow-600" />
-        </div>
-        <h1 className="text-2xl font-extrabold text-gray-800">تنظیمات سایت</h1>
-      </div>
+    <div className="space-y-6 p-4">
+      <section className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
+        <div className="flex flex-col gap-4 border-b border-gray-100 bg-gradient-to-l from-yellow-50 via-white to-white px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-yellow-500 text-white shadow-sm shadow-yellow-200">
+              <MdSettings size={23} />
+            </span>
 
-      <SettingsForm settings={settings} onSave={handleSaveSettings} />
+            <div>
+              <h1 className="text-xl font-black text-gray-900">
+                تنظیمات سایت
+              </h1>
+              <p className="mt-1 text-sm leading-6 text-gray-500">
+                اطلاعات عمومی، شبکه‌های اجتماعی و تنظیمات نمایش سایت را مدیریت
+                کنید.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SettingsForm />
     </div>
   );
 }

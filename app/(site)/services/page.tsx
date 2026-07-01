@@ -1,25 +1,25 @@
+import type { Metadata } from "next";
 import { Header } from "@/components/shared/Header";
 import LottieIcon from "@/components/ui/LottieIcon";
 import Image from "next/image";
 import Link from "next/link";
 import animation from "@/assets/animations/services.json";
-type Service = {
-  id: number;
-  title: string;
-};
+import { ServiceDto, listServices } from "@/lib/services";
+import { buildMetadata } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = buildMetadata({
+  title: "خدمات | ملیکا شمیرانی",
+  description: "خدمات طراحی گرافیک ارائه‌شده توسط ملیکا شمیرانی.",
+  path: "/services",
+});
 
 export default async function ServicesPage() {
-  let services: Service[] = [];
+  let services: ServiceDto[] = [];
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services`, {
-      cache: "no-store",
-      credentials: "include",
-    });
-
-    if (!res.ok) throw new Error("خطا در دریافت اطلاعات");
-
-    services = await res.json();
+    services = await listServices();
   } catch (error) {
     console.error("خطا در دریافت اطلاعات نمونه‌کار:", error);
   }
@@ -29,25 +29,37 @@ export default async function ServicesPage() {
       <Header />
       <section className="px-6 pb-10 max-w-[1440px] mx-auto relative z-10">
         <div className="flex justify-center items-center mt-3 lg:mt-0 mb-6">
-          <p className="text-lg lg:text-4xl font-bold text-center">
+          <h1 className="text-lg lg:text-4xl font-bold text-center">
             آنچه می‌توانم برای شما انجام دهم
-          </p>
+          </h1>
           <LottieIcon src={animation} size={120} sizeMobile={60} />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 lg:gap-15 lg:mx-20">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:mx-20 lg:gap-15">
           {services.map((service) => (
             <div
               key={service.id}
-              className="flex justify-between items-center gap-4 p-5 border-4 border-black bg-white shadow-xl shadow-black/60"
+              className="
+        group flex items-center justify-between gap-4
+        rounded-[1.5rem] border-2 border-black bg-white
+        p-5 shadow-[7px_7px_0_#111]
+        transition-all duration-300
+        hover:-translate-x-1 hover:-translate-y-1
+        hover:bg-[#CAF3AB]
+        hover:shadow-[10px_10px_0_#111]
+      "
             >
-              <span className="lg:text-2xl font-semibold">{service.title}</span>
-              <Link href="hire-me">
+              <span className="text-lg font-black leading-8 text-black lg:text-2xl">
+                {service.title}
+              </span>
+
+              <Link href="/hire-me" aria-label={`درخواست ${service.title}`}>
                 <Image
                   src="/Service-icon.svg"
                   alt="icon"
                   width={38}
                   height={38}
+                  className="h-auto w-auto"
                 />
               </Link>
             </div>

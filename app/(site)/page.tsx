@@ -1,30 +1,22 @@
+import type { Metadata } from "next";
 import ProfileCard from "@/components/sections/ProfileCard";
 import IntroText from "@/components/sections/IntroText";
 import Decorations from "@/components/sections/Decorations";
 import { Header } from "@/components/shared/Header";
+import { getAllContent } from "@/lib/content";
+import { buildMetadata } from "@/lib/seo";
 
-type HomeContentItem = {
-  key: string;
-  value: string;
-};
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = buildMetadata({
+  title: "ملیکا شمیرانی | صفحه اصلی",
+  description:
+    "به پرتفولیوی ملیکا شمیرانی خوش آمدید؛ مشاهده نمونه‌کارها و خدمات طراحی گرافیک.",
+  path: "/",
+});
 
 export default async function Home() {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/home-content`,
-    {
-      cache: "no-store", // 👈 این مهمه
-      // next: { revalidate: 0 }, // (اختیاری، برای تاکید بیشتر)
-    }
-  );
-
-  if (!response.ok) {
-    // می‌تونی اینجا یه UI خطا یا fallback برگردونی
-    console.error("Failed to fetch home content", response.status);
-    // برای ساده بودن، فعلاً یه throw:
-    throw new Error("خطا در دریافت محتوای صفحه اصلی");
-  }
-
-  const data = (await response.json()) as HomeContentItem[];
+  const data = await getAllContent();
 
   const homeContent = data.reduce<Record<string, string>>((acc, item) => {
     acc[item.key] = item.value;

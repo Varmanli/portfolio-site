@@ -68,20 +68,6 @@ export interface SocialLinks {
 }
 
 /**
- * Interface for site settings
- */
-export interface SiteSettings {
-  siteTitle: string;
-  siteDescription: string;
-  contactEmail: string;
-  socialLinks: {
-    instagram: string;
-    linkedin: string;
-    github: string;
-  };
-}
-
-/**
  * Interface for user messages
  */
 export interface Message {
@@ -93,8 +79,23 @@ export interface Message {
   isRead: boolean;
   createdAt: string;
 }
-export interface SiteSettings {
-  siteTitle: string;
-  siteDescription: string;
-  // هر چی دیگه هم هست اضافه کن
+
+/**
+ * Site settings stored as key/value rows in the `content` table.
+ */
+export interface SiteSettingsForm {
+  site_name: string;
+  site_description: string;
+  owner_name: string;
+  job_title: string;
+  short_bio: string;
+  instagram_url: string;
+  behance_url: string;
+  telegram_url: string;
+  whatsapp_url: string;
+  linkedin_url: string;
+  default_meta_title: string;
+  default_meta_description: string;
+  contact_form_enabled: boolean;
+  contact_success_message: string;
 }

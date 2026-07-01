@@ -6,6 +6,7 @@ import { MdDashboard } from "react-icons/md";
 import { Message } from "@/types/admin";
 import Stats from "@/components/admin/dashboard/Stats";
 import RecentMessages from "@/components/admin/dashboard/RecentMessages";
+import DashboardSkeleton from "@/components/admin/dashboard/DashboardSkeleton";
 import { showError } from "@/lib/utils/toast";
 
 export default function DashboardPage() {
@@ -15,10 +16,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get<Message[]>(
-          `${process.env.NEXT_PUBLIC_API_URL}/contact`,
-          { withCredentials: true } // ⬅️ خیلی مهم برای احراز هویت
-        );
+        const response = await axios.get<Message[]>("/api/messages");
         setMessages(response.data);
       } catch (error) {
         showError(error);
@@ -31,11 +29,7 @@ export default function DashboardPage() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

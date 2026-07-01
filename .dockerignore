@@ -1,0 +1,36 @@
+node_modules
+.next
+out
+dist
+coverage
+
+# env files — never bake real secrets into the image
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# local/dev artifacts
+backups
+*.sqlite
+*.sqlite3
+*.db
+dev.log
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# docs not needed in the runtime image
+README.md
+AGENTS.md
+CLAUDE.md

@@ -1,6 +1,7 @@
 import { MdEdit, MdImage } from "react-icons/md";
 import { ContentSection } from "@/types/admin";
 import Image from "next/image";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 
 interface ContentDisplayProps {
   section: ContentSection;
@@ -53,7 +54,7 @@ export default function ContentDisplay({
         ) : (
           <div
             className="prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: section.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(section.content) }}
           />
         )}
       </div>
