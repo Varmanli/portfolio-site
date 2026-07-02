@@ -16,17 +16,24 @@ COPY . .
 
 # NEXT_PUBLIC_* values are inlined at build time — Coolify must provide these
 # as build-time variables. DATABASE_URL is also read at build time by pages
-# that import the DB client at module scope, and by db:push below — it must
-# be a real, reachable connection string at build time (Coolify's Docker
-# build must be able to reach the database over the network).
+# that import the DB client at module scope, and by db:push/db:seed:prod
+# below — it must be a real, reachable connection string at build time
+# (Coolify's Docker build must be able to reach the database over the
+# network). ADMIN_EMAIL/ADMIN_PASSWORD are consumed only by db:seed:prod to
+# create/update the admin user and are never inlined into client bundles.
 ARG NEXT_PUBLIC_SITE_URL
 ARG DATABASE_URL
+ARG ADMIN_EMAIL
+ARG ADMIN_PASSWORD
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV DATABASE_URL=$DATABASE_URL
+ENV ADMIN_EMAIL=$ADMIN_EMAIL
+ENV ADMIN_PASSWORD=$ADMIN_PASSWORD
 ENV NODE_ENV=production
 
 RUN npx tsc --noEmit
 RUN npm run db:push
+RUN npm run db:seed:prod
 RUN npm run build
 
 # ---- runner: minimal production image --------------------------------------
@@ -47,7 +54,9 @@ EXPOSE 3001
 
 # Real secrets (DATABASE_URL, AUTH_SECRET, ARVAN_S3_*, ADMIN_EMAIL/PASSWORD)
 # must be provided as runtime environment variables in Coolify — never baked
-# into this image. The schema is applied during the builder stage (above,
-# via db:push, since db:migrate failed to create required tables like
-# `content` in production); no seed command runs here.
+# into this image. The schema is applied and the admin user/default content
+# are seeded during the builder stage (above, via db:push and db:seed:prod,
+# since db:migrate failed to create required tables like `content` in
+# production, and the standalone runtime image has no tsx/devDependencies
+# to run the seed script post-deploy).
 CMD ["node", "server.js"]

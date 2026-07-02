@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { db } from "./index";
 import { content, users } from "./schema";
-import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 const DEFAULT_CONTENT_KEYS = [
   "home_title",
@@ -24,42 +24,41 @@ async function seedAdminUser() {
     return;
   }
 
-  const existing = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
-
-  if (existing.length > 0) {
-    console.log(`Admin user already exists for ${email}, skipping.`);
-    return;
-  }
-
   const passwordHash = await bcrypt.hash(password, 12);
 
-  await db.insert(users).values({
-    email,
-    passwordHash,
-    name: "Admin",
-    role: "admin",
-  });
+  // Upsert on the unique `email` constraint: creates the admin on first run,
+  // and re-syncs password/role on later runs (e.g. after ADMIN_PASSWORD changes).
+  await db
+    .insert(users)
+    .values({
+      email,
+      passwordHash,
+      name: "Admin",
+      role: "admin",
+    })
+    .onConflictDoUpdate({
+      target: users.email,
+      set: {
+        passwordHash,
+        role: "admin",
+        updatedAt: sql`now()`,
+      },
+    });
 
-  console.log(`Created admin user: ${email}`);
+  console.log(`Upserted admin user: ${email}`);
 }
 
 async function seedDefaultContent() {
+  // Upsert on the unique `key` constraint, but do nothing on conflict — this
+  // only fills in missing content rows and must never clobber content an
+  // admin has already edited through the admin panel.
   for (const key of DEFAULT_CONTENT_KEYS) {
-    const existing = await db
-      .select({ id: content.id })
-      .from(content)
-      .where(eq(content.key, key))
-      .limit(1);
-
-    if (existing.length > 0) continue;
-
-    await db.insert(content).values({ key, value: "" });
-    console.log(`Created default content key: ${key}`);
+    await db
+      .insert(content)
+      .values({ key, value: "" })
+      .onConflictDoNothing({ target: content.key });
   }
+  console.log(`Ensured default content keys exist: ${DEFAULT_CONTENT_KEYS.join(", ")}`);
 }
 
 async function main() {

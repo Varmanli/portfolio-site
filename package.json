@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:seed": "tsx --env-file=.env.local lib/db/seed.ts"
+    "db:seed": "tsx --env-file=.env.local lib/db/seed.ts",
+    "db:seed:prod": "tsx lib/db/seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1077.0",
