@@ -11,6 +11,7 @@ import {
   MdVisibility,
   MdVisibilityOff,
 } from "react-icons/md";
+
 import { LoginFormData, LoginFormErrors } from "@/types/admin";
 
 export default function LoginForm() {
@@ -96,30 +97,38 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gray-50 px-4 py-10">
-      <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-yellow-200/50 blur-3xl" />
-      <div className="pointer-events-none absolute -left-24 bottom-20 h-72 w-72 rounded-full bg-yellow-100/70 blur-3xl" />
+    <main
+      dir="rtl"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#FFFDF5] px-4 py-10"
+    >
+      <div className="pointer-events-none absolute right-10 top-10 h-72 w-72 rounded-full bg-[#F196E5]/25 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-16 left-10 h-80 w-80 rounded-full bg-[#CAF3AB]/50 blur-3xl" />
+      <div className="pointer-events-none absolute left-1/2 top-32 h-52 w-52 rounded-full bg-sky-200/40 blur-3xl" />
 
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-xl shadow-gray-200/60">
-        <div className="border-b border-gray-100 bg-gradient-to-l from-yellow-50 via-white to-white px-6 py-6 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-yellow-500 text-white shadow-sm shadow-yellow-200">
-            <MdAdminPanelSettings size={34} />
+      <section className="relative z-10 w-full max-w-md overflow-hidden rounded-[2rem] border-2 border-black bg-white shadow-[10px_10px_0_#111]">
+        <div className="border-b-2 border-black bg-[#FFF7D8] px-6 py-7 text-center">
+          <div className="mx-auto mb-4 flex h-18 w-18 items-center justify-center rounded-3xl border-2 border-black bg-[#FFE066] text-black shadow-[5px_5px_0_#111]">
+            <MdAdminPanelSettings size={38} />
           </div>
 
-          <h1 className="text-2xl font-black text-gray-900">
+          <div className="mx-auto mb-3 inline-flex rounded-full border-2 border-black bg-[#F196E5] px-4 py-1.5 text-xs font-black text-white shadow-[3px_3px_0_#111]">
+            پنل مدیریت
+          </div>
+
+          <h1 className="text-2xl font-black leading-10 text-black">
             ورود به پنل مدیریت
           </h1>
 
-          <p className="mt-2 text-sm leading-6 text-gray-500">
+          <p className="mt-2 text-sm font-bold leading-7 text-black/55">
             برای مدیریت محتوا، نمونه‌کارها و پیام‌ها وارد شوید.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 px-6 py-6">
+        <form onSubmit={handleSubmit} className="space-y-5 px-5 py-6 sm:px-6">
           <div>
             <label
               htmlFor="email"
-              className="mb-2 block text-sm font-black text-gray-800"
+              className="mb-2 block text-sm font-black text-black"
             >
               ایمیل
             </label>
@@ -134,18 +143,16 @@ export default function LoginForm() {
                 onChange={handleChange}
                 placeholder="example@email.com"
                 className={[
-                  "h-12 w-full rounded-2xl border bg-white px-11 text-left text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:ring-4",
-                  errors.email
-                    ? "border-red-300 focus:border-red-400 focus:ring-red-100"
-                    : "border-gray-200 focus:border-yellow-400 focus:ring-yellow-100",
+                  "h-12 w-full rounded-2xl border-2 bg-white px-11 text-left text-sm font-bold text-black outline-none transition placeholder:text-black/35 focus:bg-[#FFF7D8] focus:shadow-[4px_4px_0_#111]",
+                  errors.email ? "border-red-500" : "border-black",
                 ].join(" ")}
               />
 
-              <MdEmail className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <MdEmail className="absolute right-4 top-1/2 -translate-y-1/2 text-black/45" />
             </div>
 
             {errors.email && (
-              <p className="mt-2 rounded-2xl bg-red-50 px-3 py-2 text-xs font-bold text-red-600">
+              <p className="mt-2 rounded-2xl border-2 border-black bg-red-100 px-3 py-2 text-xs font-black text-red-600 shadow-[3px_3px_0_#111]">
                 {errors.email}
               </p>
             )}
@@ -154,7 +161,7 @@ export default function LoginForm() {
           <div>
             <label
               htmlFor="password"
-              className="mb-2 block text-sm font-black text-gray-800"
+              className="mb-2 block text-sm font-black text-black"
             >
               رمز عبور
             </label>
@@ -169,19 +176,17 @@ export default function LoginForm() {
                 onChange={handleChange}
                 placeholder="••••••••"
                 className={[
-                  "h-12 w-full rounded-2xl border bg-white px-11 text-left text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:ring-4",
-                  errors.password
-                    ? "border-red-300 focus:border-red-400 focus:ring-red-100"
-                    : "border-gray-200 focus:border-yellow-400 focus:ring-yellow-100",
+                  "h-12 w-full rounded-2xl border-2 bg-white px-11 text-left text-sm font-bold text-black outline-none transition placeholder:text-black/35 focus:bg-[#FFF7D8] focus:shadow-[4px_4px_0_#111]",
+                  errors.password ? "border-red-500" : "border-black",
                 ].join(" ")}
               />
 
-              <MdLock className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <MdLock className="absolute right-4 top-1/2 -translate-y-1/2 text-black/45" />
 
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute left-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
+                className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl border-2 border-black bg-white text-black shadow-[2px_2px_0_#111] transition hover:-translate-x-0.5 hover:-translate-y-[calc(50%+2px)] hover:bg-[#CAF3AB]"
                 aria-label={showPassword ? "مخفی کردن رمز" : "نمایش رمز"}
               >
                 {showPassword ? (
@@ -193,7 +198,7 @@ export default function LoginForm() {
             </div>
 
             {errors.password && (
-              <p className="mt-2 rounded-2xl bg-red-50 px-3 py-2 text-xs font-bold text-red-600">
+              <p className="mt-2 rounded-2xl border-2 border-black bg-red-100 px-3 py-2 text-xs font-black text-red-600 shadow-[3px_3px_0_#111]">
                 {errors.password}
               </p>
             )}
@@ -202,19 +207,19 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-yellow-500 px-5 text-sm font-black text-white shadow-sm shadow-yellow-200 transition hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl border-2 border-black bg-[#CAF3AB] px-5 text-sm font-black text-black shadow-[4px_4px_0_#111] transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#111] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0_#111]"
           >
             <MdLogin size={20} className={isLoading ? "animate-pulse" : ""} />
             {isLoading ? "در حال ورود..." : "ورود"}
           </button>
         </form>
 
-        <div className="border-t border-gray-100 bg-gray-50/70 px-6 py-4 text-center">
-          <p className="text-xs leading-5 text-gray-400">
+        <div className="border-t-2 border-black bg-[#FFF7D8] px-6 py-4 text-center">
+          <p className="text-xs font-bold leading-6 text-black/50">
             دسترسی به این بخش فقط برای مدیر سایت امکان‌پذیر است.
           </p>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

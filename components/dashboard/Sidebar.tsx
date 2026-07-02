@@ -68,15 +68,26 @@ export default function Sidebar() {
 
   if (!mounted) {
     return (
-      <aside className="hidden h-screen w-72 shrink-0 border-l border-gray-100 bg-white p-4 shadow-sm lg:block">
-        <div className="mb-4 h-24 animate-pulse rounded-3xl bg-gray-100" />
-        <div className="space-y-2 rounded-3xl border border-gray-100 bg-gray-50/60 p-2">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-16 animate-pulse rounded-2xl bg-white"
-            />
-          ))}
+      <aside className="sticky top-0 hidden h-screen w-[304px] shrink-0 border-l-2 border-black bg-[#FFFDF5] p-4 lg:block">
+        <div className="flex h-full flex-col">
+          <div className="mb-4 rounded-[2rem] border-2 border-black bg-white p-5 shadow-[8px_8px_0_#111]">
+            <div className="flex items-center gap-3">
+              <div className="h-14 w-14 animate-pulse rounded-2xl bg-[#FFE066]" />
+              <div className="space-y-2">
+                <div className="h-5 w-28 animate-pulse rounded-full bg-black/10" />
+                <div className="h-3 w-20 animate-pulse rounded-full bg-black/10" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 space-y-3 rounded-[2rem] border-2 border-black bg-white p-3 shadow-[8px_8px_0_#111]">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-[74px] animate-pulse rounded-[1.5rem] border-2 border-black bg-[#FFF7D8] shadow-[3px_3px_0_#111]"
+              />
+            ))}
+          </div>
         </div>
       </aside>
     );
@@ -85,39 +96,42 @@ export default function Sidebar() {
   return (
     <aside
       className={[
-        "sticky top-0 hidden h-screen shrink-0 border-l border-gray-100 bg-white/95 p-4 shadow-sm backdrop-blur transition-all duration-300 lg:block",
-        collapsed ? "w-24" : "w-72",
+        "sticky top-0 hidden h-screen shrink-0 border-l-2 border-black bg-[#FFFDF5] p-4 transition-all duration-300 lg:block",
+        collapsed ? "w-[104px]" : "w-[304px]",
       ].join(" ")}
     >
       <div className="flex h-full flex-col">
-        <div
-          className={[
-            "mb-4 overflow-hidden rounded-3xl border border-gray-100 bg-gradient-to-l from-yellow-50 via-white to-white transition-all",
-            collapsed ? "p-3" : "p-5",
-          ].join(" ")}
-        >
+        <div className="mb-4 overflow-hidden rounded-[2rem] border-2 border-black bg-white shadow-[8px_8px_0_#111]">
           <div
             className={[
-              "flex items-center",
-              collapsed ? "justify-center" : "gap-3",
+              "relative overflow-hidden bg-[#FFF7D8] transition-all",
+              collapsed ? "p-3" : "p-5",
             ].join(" ")}
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-yellow-500 text-lg font-black text-white shadow-sm shadow-yellow-200">
-              ش
-            </span>
+            <div className="pointer-events-none absolute -left-10 -top-10 h-28 w-28 rounded-full bg-[#F196E5]/35 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-10 right-8 h-24 w-24 rounded-full bg-[#CAF3AB]/55 blur-2xl" />
 
-            {!collapsed && (
-              <div className="min-w-0">
-                <h1 className="text-lg font-black text-gray-900">پنل مدیریت</h1>
-                <p className="mt-1 text-xs leading-5 text-gray-500">
-                  مدیریت سایت
-                </p>
-              </div>
-            )}
+            <div
+              className={[
+                "relative z-10 flex items-center",
+                collapsed ? "justify-center" : "gap-3",
+              ].join(" ")}
+            >
+              {!collapsed && (
+                <div className="min-w-0">
+                  <h1 className="text-lg font-black text-black">پنل مدیریت</h1>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <nav className="flex-1 space-y-2 overflow-y-auto rounded-3xl border border-gray-100 bg-gray-50/60 p-2">
+        <nav
+          className={[
+            "flex-1 overflow-y-auto rounded-[2rem] border-2 border-black bg-white shadow-[8px_8px_0_#111]",
+            collapsed ? "space-y-3 p-2" : "space-y-3 p-3",
+          ].join(" ")}
+        >
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = isItemActive(item.path);
@@ -127,20 +141,31 @@ export default function Sidebar() {
                 key={item.path}
                 href={item.path}
                 title={collapsed ? item.name : undefined}
+                aria-current={isActive ? "page" : undefined}
                 className={[
-                  "group relative flex items-center rounded-2xl transition-all duration-200",
+                  "group relative flex items-center overflow-hidden rounded-[1.5rem] border-2 border-black transition",
+                  "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_#111]",
                   collapsed ? "justify-center px-2 py-3" : "gap-3 px-3 py-3",
                   isActive
-                    ? "bg-yellow-500 text-white shadow-sm shadow-yellow-200"
-                    : "text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow-sm",
+                    ? "bg-[#FFF7D8] shadow-[4px_4px_0_#F196E5]"
+                    : "bg-white shadow-[3px_3px_0_#111]",
                 ].join(" ")}
               >
+                <div
+                  className={[
+                    "pointer-events-none absolute -left-8 -top-8 h-20 w-20 rounded-full blur-2xl transition",
+                    isActive
+                      ? "bg-[#F196E5]/45"
+                      : "bg-[#CAF3AB]/35 opacity-0 group-hover:opacity-100",
+                  ].join(" ")}
+                />
+
                 <span
                   className={[
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition",
+                    "relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border-2 border-black text-black shadow-[3px_3px_0_#111] transition",
                     isActive
-                      ? "bg-white/20 text-white"
-                      : "bg-white text-gray-400 ring-1 ring-gray-100 group-hover:text-yellow-600",
+                      ? "bg-[#FFE066]"
+                      : "bg-[#CAF3AB] group-hover:bg-[#FFE066]",
                   ].join(" ")}
                 >
                   <Icon size={22} />
@@ -148,16 +173,12 @@ export default function Sidebar() {
 
                 {!collapsed && (
                   <>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-black">
+                    <span className="relative z-10 min-w-0 flex-1">
+                      <span className="block text-sm font-black text-black">
                         {item.name}
                       </span>
-                      <span
-                        className={[
-                          "mt-0.5 block text-xs leading-5",
-                          isActive ? "text-white/75" : "text-gray-400",
-                        ].join(" ")}
-                      >
+
+                      <span className="mt-0.5 block truncate text-xs font-bold leading-5 text-black/50">
                         {item.description}
                       </span>
                     </span>
@@ -165,17 +186,17 @@ export default function Sidebar() {
                     <MdChevronLeft
                       size={20}
                       className={[
-                        "shrink-0 transition",
+                        "relative z-10 shrink-0 transition",
                         isActive
-                          ? "text-white"
-                          : "text-gray-300 group-hover:-translate-x-1 group-hover:text-yellow-600",
+                          ? "text-black"
+                          : "text-black/35 group-hover:-translate-x-1 group-hover:text-black",
                       ].join(" ")}
                     />
                   </>
                 )}
 
                 {collapsed && isActive && (
-                  <span className="absolute right-0 h-8 w-1 rounded-full bg-white" />
+                  <span className="absolute right-1 top-1/2 h-8 w-1.5 -translate-y-1/2 rounded-full border border-black bg-[#F196E5]" />
                 )}
               </Link>
             );
@@ -184,14 +205,21 @@ export default function Sidebar() {
 
         <div className="mt-4 space-y-3">
           {!collapsed && (
-            <div className="rounded-3xl border border-gray-100 bg-white p-4">
-              <p className="text-xs font-bold text-gray-400">وضعیت سیستم</p>
+            <div className="rounded-[2rem] border-2 border-black bg-white p-4 shadow-[8px_8px_0_#111]">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-black text-black/45">
+                    وضعیت سیستم
+                  </p>
+                  <p className="mt-1 text-sm font-black text-black">
+                    آنلاین و فعال
+                  </p>
+                </div>
 
-              <div className="mt-3 flex items-center justify-between rounded-2xl bg-green-50 px-3 py-2">
-                <span className="text-xs font-bold text-green-700">
-                  آنلاین و فعال
+                <span className="relative flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-black bg-[#CAF3AB] shadow-[3px_3px_0_#111]">
+                  <span className="h-3 w-3 rounded-full bg-green-500" />
+                  <span className="absolute h-3 w-3 animate-ping rounded-full bg-green-500/50" />
                 </span>
-                <span className="h-2.5 w-2.5 rounded-full bg-green-500 shadow-sm shadow-green-200" />
               </div>
             </div>
           )}
@@ -200,10 +228,11 @@ export default function Sidebar() {
             type="button"
             onClick={() => setCollapsed((prev) => !prev)}
             className={[
-              "flex w-full items-center rounded-2xl border border-gray-100 bg-white text-sm font-bold text-gray-600 shadow-sm transition hover:border-yellow-200 hover:bg-yellow-50 hover:text-yellow-700",
+              "flex w-full items-center rounded-2xl border-2 border-black bg-white text-sm font-black text-black shadow-[4px_4px_0_#111] transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:bg-[#FFF7D8] hover:shadow-[6px_6px_0_#111]",
               collapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3",
             ].join(" ")}
             title={collapsed ? "باز کردن فهرست" : undefined}
+            aria-label={collapsed ? "باز کردن فهرست" : "بستن فهرست"}
           >
             <MdMenuOpen
               size={22}

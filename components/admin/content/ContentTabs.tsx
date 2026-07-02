@@ -25,8 +25,11 @@ export default function ContentTabs({
   onTabChange,
 }: ContentTabsProps) {
   return (
-    <div className="mb-6 rounded-3xl border border-gray-100 bg-white p-2 shadow-sm">
-      <div className="grid gap-2 sm:grid-cols-2">
+    <div
+      dir="rtl"
+      className="mb-6 rounded-[2rem] border-2 border-black bg-white p-2 shadow-[8px_8px_0_#111]"
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -36,35 +39,52 @@ export default function ContentTabs({
               key={tab.key}
               type="button"
               onClick={() => onTabChange(tab.key)}
+              aria-pressed={isActive}
               className={[
-                "group flex items-center gap-4 rounded-2xl px-4 py-4 text-right transition-all duration-200",
+                "group relative overflow-hidden rounded-[1.5rem] border-2 border-black px-4 py-4 text-right transition",
+                "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#111]",
                 isActive
-                  ? "bg-yellow-50 text-yellow-700 shadow-sm ring-1 ring-yellow-100"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                  ? "bg-[#FFF7D8] shadow-[5px_5px_0_#F196E5]"
+                  : "bg-white shadow-[4px_4px_0_#111]",
               ].join(" ")}
             >
-              <span
+              <div
                 className={[
-                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition",
+                  "pointer-events-none absolute -left-8 -top-8 h-24 w-24 rounded-full blur-2xl transition",
                   isActive
-                    ? "bg-yellow-500 text-white shadow-sm shadow-yellow-200"
-                    : "bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-yellow-600",
+                    ? "bg-[#F196E5]/45"
+                    : "bg-[#CAF3AB]/30 opacity-0 group-hover:opacity-100",
                 ].join(" ")}
-              >
-                <Icon className="h-5 w-5" />
-              </span>
+              />
 
-              <span className="min-w-0">
-                <span className="block text-sm font-bold">{tab.label}</span>
+              <div className="relative z-10 flex items-center gap-4">
                 <span
                   className={[
-                    "mt-1 block text-xs leading-5",
-                    isActive ? "text-yellow-700/70" : "text-gray-400",
+                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border-2 border-black text-black shadow-[3px_3px_0_#111] transition",
+                    isActive
+                      ? "bg-[#FFE066]"
+                      : "bg-[#CAF3AB] group-hover:bg-[#FFE066]",
                   ].join(" ")}
                 >
-                  {tab.description}
+                  <Icon className="h-5 w-5" />
                 </span>
-              </span>
+
+                <span className="min-w-0">
+                  <span className="block text-sm font-black text-black">
+                    {tab.label}
+                  </span>
+
+                  <span className="mt-1 block text-xs font-bold leading-6 text-black/50">
+                    {tab.description}
+                  </span>
+                </span>
+
+                {isActive && (
+                  <span className="mr-auto shrink-0 rounded-full border-2 border-black bg-[#F196E5] px-3 py-1 text-[11px] font-black text-white shadow-[2px_2px_0_#111]">
+                    فعال
+                  </span>
+                )}
+              </div>
             </button>
           );
         })}

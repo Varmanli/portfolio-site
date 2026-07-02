@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+
 import Skeleton from "@/components/skeletons/Skeleton";
 
 interface ContactPageFormTypes {
@@ -171,45 +172,88 @@ export default function ContentContactPageForm() {
 
   if (isLoadingInitial) {
     return (
-      <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
-        <div className="border-b border-gray-100 bg-gradient-to-l from-yellow-50 via-white to-white px-6 py-5">
-          <Skeleton className="h-6 w-44" rounded="full" />
-          <Skeleton className="mt-3 h-4 w-72" rounded="full" />
+      <section
+        dir="rtl"
+        className="overflow-hidden rounded-[2rem] border-2 border-black bg-white shadow-[10px_10px_0_#111]"
+      >
+        <div className="border-b-2 border-black bg-[#FFF7D8] px-5 py-5 sm:px-6">
+          <div className="flex items-center gap-4">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-black bg-[#FFE066] shadow-[4px_4px_0_#111]">
+              <Mail className="h-7 w-7 text-black" />
+            </span>
+
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-44 rounded-xl" />
+              <Skeleton className="h-4 w-72 rounded-xl" />
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-6 p-6">
-          <Skeleton className="h-44" rounded="2xl" />
-          <div className="grid gap-5 md:grid-cols-3">
-            <Skeleton className="h-24" rounded="2xl" />
-            <Skeleton className="h-24" rounded="2xl" />
-            <Skeleton className="h-24" rounded="2xl" />
+        <div className="space-y-6 p-4 sm:p-6">
+          <div className="rounded-[1.75rem] border-2 border-black bg-white p-4 shadow-[6px_6px_0_#111]">
+            <Skeleton className="h-44 rounded-2xl" />
           </div>
-          <Skeleton className="ms-auto h-11 w-36" rounded="2xl" />
+
+          <div className="grid gap-5 md:grid-cols-3">
+            <div className="rounded-[1.75rem] border-2 border-black bg-white p-4 shadow-[6px_6px_0_#111]">
+              <Skeleton className="h-24 rounded-2xl" />
+            </div>
+
+            <div className="rounded-[1.75rem] border-2 border-black bg-white p-4 shadow-[6px_6px_0_#111]">
+              <Skeleton className="h-24 rounded-2xl" />
+            </div>
+
+            <div className="rounded-[1.75rem] border-2 border-black bg-white p-4 shadow-[6px_6px_0_#111]">
+              <Skeleton className="h-24 rounded-2xl" />
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <Skeleton className="h-12 w-40 rounded-2xl" />
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
     <form
+      dir="rtl"
       onSubmit={handleSubmit}
-      className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm"
+      className="overflow-hidden rounded-[2rem] border-2 border-black bg-white shadow-[10px_10px_0_#111]"
     >
-      <div className="border-b border-gray-100 bg-gradient-to-l from-yellow-50 via-white to-white px-6 py-5">
-        <h2 className="text-lg font-bold text-gray-900">محتوای صفحه تماس</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          توضیحات، شماره تماس، ایمیل و شهر نمایش‌داده‌شده در صفحه تماس را مدیریت
-          کنید.
-        </p>
+      <div className="border-b-2 border-black bg-[#FFF7D8] px-5 py-5 sm:px-6">
+        <div className="flex items-start gap-4">
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-black bg-[#FFE066] text-black shadow-[4px_4px_0_#111]">
+            <Mail className="h-7 w-7" />
+          </span>
+
+          <div>
+            <div className="mb-2 inline-flex rounded-full border-2 border-black bg-[#F196E5] px-4 py-1.5 text-xs font-black text-white shadow-[3px_3px_0_#111]">
+              محتوای سایت
+            </div>
+
+            <h2 className="text-xl font-black leading-9 text-black">
+              محتوای صفحه تماس
+            </h2>
+
+            <p className="mt-1 text-sm font-bold leading-7 text-black/55">
+              توضیحات، شماره تماس، ایمیل و شهر نمایش‌داده‌شده در صفحه تماس را
+              مدیریت کنید.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-6 p-6">
-        <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
+      <div className="flex flex-col gap-6 p-4 sm:p-6">
+        <section className="rounded-[1.75rem] border-2 border-black bg-white p-4 shadow-[6px_6px_0_#111]">
           <label
             htmlFor="contact_desc"
-            className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800"
+            className="mb-3 flex items-center gap-3 text-sm font-black text-black"
           >
-            <AlignRight className="h-4 w-4 text-yellow-600" />
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl border-2 border-black bg-[#FFE066] text-black shadow-[3px_3px_0_#111]">
+              <AlignRight className="h-5 w-5" />
+            </span>
             توضیحات صفحه تماس
           </label>
 
@@ -219,21 +263,24 @@ export default function ContentContactPageForm() {
             value={contactPageForm.contact_desc}
             onChange={handleInputContactChange}
             placeholder="یک متن کوتاه و صمیمی برای دعوت مخاطب به ارتباط بنویسید..."
-            className="min-h-44 w-full resize-none rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm leading-8 text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100"
+            className="min-h-44 w-full resize-none rounded-2xl border-2 border-black bg-white px-4 py-3 text-sm font-bold leading-8 text-black outline-none transition placeholder:text-black/35 focus:bg-[#FFF7D8] focus:shadow-[4px_4px_0_#111]"
           />
 
-          <div className="mt-2 flex justify-end text-xs text-gray-400">
-            {contactPageForm.contact_desc.length} کاراکتر
+          <div className="mt-2 flex justify-end text-xs font-bold text-black/45">
+            {contactPageForm.contact_desc.length.toLocaleString("fa-IR")}{" "}
+            کاراکتر
           </div>
-        </div>
+        </section>
 
         <div className="grid gap-5 md:grid-cols-3">
-          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
+          <section className="rounded-[1.75rem] border-2 border-black bg-white p-4 shadow-[6px_6px_0_#111]">
             <label
               htmlFor="contact_phone"
-              className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800"
+              className="mb-3 flex items-center gap-3 text-sm font-black text-black"
             >
-              <Phone className="h-4 w-4 text-yellow-600" />
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl border-2 border-black bg-[#CAF3AB] text-black shadow-[3px_3px_0_#111]">
+                <Phone className="h-5 w-5" />
+              </span>
               شماره تماس
             </label>
 
@@ -245,16 +292,18 @@ export default function ContentContactPageForm() {
               type="tel"
               dir="ltr"
               placeholder="0912..."
-              className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-left text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100"
+              className="h-12 w-full rounded-2xl border-2 border-black bg-white px-4 text-left text-sm font-bold text-black outline-none transition placeholder:text-black/35 focus:bg-[#FFF7D8] focus:shadow-[4px_4px_0_#111]"
             />
-          </div>
+          </section>
 
-          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
+          <section className="rounded-[1.75rem] border-2 border-black bg-white p-4 shadow-[6px_6px_0_#111]">
             <label
               htmlFor="contact_email"
-              className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800"
+              className="mb-3 flex items-center gap-3 text-sm font-black text-black"
             >
-              <Mail className="h-4 w-4 text-yellow-600" />
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl border-2 border-black bg-[#CAF3AB] text-black shadow-[3px_3px_0_#111]">
+                <Mail className="h-5 w-5" />
+              </span>
               ایمیل
             </label>
 
@@ -266,16 +315,18 @@ export default function ContentContactPageForm() {
               type="email"
               dir="ltr"
               placeholder="example@email.com"
-              className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-left text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100"
+              className="h-12 w-full rounded-2xl border-2 border-black bg-white px-4 text-left text-sm font-bold text-black outline-none transition placeholder:text-black/35 focus:bg-[#FFF7D8] focus:shadow-[4px_4px_0_#111]"
             />
-          </div>
+          </section>
 
-          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
+          <section className="rounded-[1.75rem] border-2 border-black bg-white p-4 shadow-[6px_6px_0_#111]">
             <label
               htmlFor="contact_city"
-              className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800"
+              className="mb-3 flex items-center gap-3 text-sm font-black text-black"
             >
-              <Building2 className="h-4 w-4 text-yellow-600" />
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl border-2 border-black bg-[#CAF3AB] text-black shadow-[3px_3px_0_#111]">
+                <Building2 className="h-5 w-5" />
+              </span>
               شهر
             </label>
 
@@ -286,16 +337,16 @@ export default function ContentContactPageForm() {
               onChange={handleInputContactChange}
               type="text"
               placeholder="مثلاً تهران"
-              className="h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100"
+              className="h-12 w-full rounded-2xl border-2 border-black bg-white px-4 text-sm font-bold text-black outline-none transition placeholder:text-black/35 focus:bg-[#FFF7D8] focus:shadow-[4px_4px_0_#111]"
             />
-          </div>
+          </section>
         </div>
 
-        <div className="flex items-center justify-end border-t border-gray-100 pt-2">
+        <div className="flex items-center justify-end border-t-2 border-black/10 pt-5">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex min-w-36 items-center justify-center gap-2 rounded-2xl bg-yellow-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-yellow-200 transition hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex min-w-40 items-center justify-center gap-2 rounded-2xl border-2 border-black bg-[#CAF3AB] px-6 py-3 text-sm font-black text-black shadow-[4px_4px_0_#111] transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#111] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0_#111]"
           >
             {isSubmitting ? (
               <>
