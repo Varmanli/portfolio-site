@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import StarIcon from "@/components/ui/StarIcon";
 import LottieIcon from "@/components/ui/LottieIcon";
 import light from "@/assets/animations/light.json";
@@ -9,7 +12,14 @@ interface ProfileCardProps {
 }
 
 export default function ProfileCard({ image }: ProfileCardProps) {
-  const imageSource = getProfileImageSource(image);
+  const validatedImageSource = getProfileImageSource(image);
+  const [imageSource, setImageSource] = useState(validatedImageSource);
+
+  // The content row can change during client navigation. Reset a previous
+  // fallback only when the validated source itself changes.
+  useEffect(() => {
+    setImageSource(validatedImageSource);
+  }, [validatedImageSource]);
 
   return (
     <div className="w-fit border-6 shadow-2xl border-black p-10 bg-white mt-5 mx-3 lg:mx-0 lg:mt-15 relative">
@@ -24,6 +34,11 @@ export default function ProfileCard({ image }: ProfileCardProps) {
         width={350}
         height={360}
         priority
+        // Arvan URLs must be fetched by the visitor's browser. Without this,
+        // Next's image optimizer fetches them from the Node server and a DNS
+        // failure there turns the image request into a runtime `fetch failed`.
+        unoptimized
+        onError={() => setImageSource(getProfileImageSource(undefined))}
       />
 
       <StarIcon

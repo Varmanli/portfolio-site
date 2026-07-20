@@ -33,7 +33,11 @@ export function getSafeImageSource(value: unknown): string | null {
 
   try {
     const url = new URL(source);
-    return url.protocol === "https:" && ALLOWED_REMOTE_IMAGE_HOSTS.has(url.hostname)
+    return url.protocol === "https:" &&
+      !url.username &&
+      !url.password &&
+      url.pathname !== "/" &&
+      ALLOWED_REMOTE_IMAGE_HOSTS.has(url.hostname)
       ? source
       : null;
   } catch {
