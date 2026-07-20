@@ -24,4 +24,4 @@ export interface CreatePortfolioDto {
   content: string;
 }
 
-export interface UpdatePortfolioDto extends Partial<CreatePortfolioDto> {}
+export type UpdatePortfolioDto = Partial<CreatePortfolioDto>;

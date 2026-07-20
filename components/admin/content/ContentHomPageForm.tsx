@@ -16,6 +16,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import Skeleton from "@/components/skeletons/Skeleton";
+import { getSafeImageSource } from "@/utils/image";
 
 type Primitive = string | number | boolean | null | undefined;
 
@@ -156,16 +157,18 @@ export default function ContentHomePageForm() {
           {} as Record<string, string>,
         );
 
+        const savedImageUrl = getSafeImageSource(mappedData.home_image);
+
         setMainPageForm((prev) => ({
           ...prev,
           home_title: mappedData.home_title ?? prev.home_title,
           home_desc: mappedData.home_desc ?? prev.home_desc,
-          home_image_url: mappedData.home_image ?? prev.home_image_url,
+          home_image_url: savedImageUrl ?? "",
           home_image_file: null,
         }));
 
-        if (mappedData.home_image) {
-          setPreviewUrl(mappedData.home_image);
+        if (savedImageUrl) {
+          setPreviewUrl(savedImageUrl);
         }
       } catch (err) {
         toast.error("دریافت اطلاعات اولیه با خطا مواجه شد");

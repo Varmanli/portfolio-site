@@ -24,7 +24,7 @@ export default function DashboardLayout({
       .catch(() => {
         router.replace("/admin/login");
       });
-  }, []);
+  }, [router]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100 text-gray-800">

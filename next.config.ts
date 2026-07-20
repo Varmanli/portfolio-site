@@ -16,6 +16,23 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        // Dashboard pages contain authenticated, interactive forms. Serving a
+        // cached RSC/HTML response after a rollout can pair an old client with
+        // a new server action manifest, so these responses must never be
+        // cached by a browser, CDN, or reverse proxy.
+        source: "/admin/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "private, no-store, max-age=0, must-revalidate",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

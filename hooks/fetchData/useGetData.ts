@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios, { AxiosError } from "axios";
 
 /**
@@ -14,7 +14,7 @@ const useGetData = <T>(url: string) => {
   /**
    * Fetches data from the specified URL using a GET request.
    */
-  const getData = async () => {
+  const getData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(url);
@@ -29,12 +29,12 @@ const useGetData = <T>(url: string) => {
     } finally {
       setLoading(false); // Set loading to false after the request completes
     }
-  };
+  }, [url]);
 
   // Fetch data when the component mounts
   useEffect(() => {
     getData();
-  }, [url]); // The effect will run when the URL changes
+  }, [getData]); // The effect will run when the URL changes
 
   return { data, loading, error, getData }; // Return the state and the function to trigger the request
 };

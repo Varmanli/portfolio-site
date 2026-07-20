@@ -2,13 +2,14 @@ import Image from "next/image";
 import StarIcon from "@/components/ui/StarIcon";
 import LottieIcon from "@/components/ui/LottieIcon";
 import light from "@/assets/animations/light.json";
+import { getProfileImageSource } from "@/utils/image";
 
 interface ProfileCardProps {
   image?: string;
 }
 
 export default function ProfileCard({ image }: ProfileCardProps) {
-  const fallbackImage = "/images/profile-placeholder.png"; // هر چی دوست داری
+  const imageSource = getProfileImageSource(image);
 
   return (
     <div className="w-fit border-6 shadow-2xl border-black p-10 bg-white mt-5 mx-3 lg:mx-0 lg:mt-15 relative">
@@ -18,7 +19,7 @@ export default function ProfileCard({ image }: ProfileCardProps) {
 
       <Image
         className="border-4 border-black"
-        src={image || fallbackImage}
+        src={imageSource}
         alt="عکس من"
         width={350}
         height={360}
