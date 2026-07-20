@@ -52,11 +52,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 EXPOSE 3001
 
-# A proxy must only route traffic to a fully started revision. This is
-# especially important for Next.js Server Action manifests, which are tied to
-# one build and must not be mixed across old/new containers during a rollout.
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:3001/ > /dev/null || exit 1
 
 # Real secrets (DATABASE_URL, AUTH_SECRET, ARVAN_S3_*, ADMIN_EMAIL/PASSWORD)
 # must be provided as runtime environment variables in Coolify — never baked
